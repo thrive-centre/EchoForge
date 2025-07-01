@@ -50,7 +50,7 @@ model = Echo2DClassifier(pretrained=True)
 
 | Model Name         | Task                   | Status |
 |--------------------|------------------------|--------|
-| [Echo2DClassifier](./models/echo2dclassifier/README.md)   | 2D View Classification | ✅ Released |
+| [Echo2DClassifier](./echoforge/models/echo2dclassifier/README.md)   | 2D View Classification | ✅ Released |
 | EchoSegNet         | Chamber Segmentation   | 🔜 Coming soon |
 | EchoLandmarker     | Landmark Detection     | 🔜 Coming soon |
 
