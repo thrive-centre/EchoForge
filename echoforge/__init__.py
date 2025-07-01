@@ -1,4 +1,4 @@
-from .models.echo2dclassifier import build_echo2d_model
+from .models.echo2dclassifier.echo2dclassifier import build_echo2d_model
 
 def load_model(name, pretrained=True):
     if name.lower() == "echo2dclassifier":
