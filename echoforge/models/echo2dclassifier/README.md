@@ -59,5 +59,5 @@ Total model:   25.5M parameters
 ## 📤 Source & Training
 
 - Dataset: UNITY-Classification-B
-- Labels by: Darrel
-- Training by: Mayur Agrawal
+- Labels by: XXXX
+- Training by: XXXX

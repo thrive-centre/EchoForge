@@ -68,5 +68,5 @@ model = Echo2DClassifier(pretrained=True)
 
 ## 👥 Credits
 
-- Developed by: **Mayur Agrawal**
+- Developed by: **XXXX**
 - Collaborators: XXXXX
