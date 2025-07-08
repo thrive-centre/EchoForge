@@ -3,8 +3,8 @@
         "repo_id": "thrive-2025/Echo2DClassifier",
     "filename": "model_run0_perc.h5"
   },
-  "EchoLVSegmetation": {
-        "repo_id": "thrive-2025/EchoLVSegmetation",
+  "EchoLVSNet": {
+        "repo_id": "thrive-2025/echolvsnet",
     "filename": "best_finetuned_model_1.h5"
   }
 }
