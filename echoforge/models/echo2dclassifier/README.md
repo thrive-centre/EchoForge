@@ -11,23 +11,23 @@
 - **Output**: One of 47 standard echocardiographic views
 - **Training**: Trained on high-quality labels from UNITY-Classification-B
 - **Saved Format**: Full `.h5` model (architecture + weights)
+- **Expected Input Format**: Images must be resized to `224x224x3` before passing to the model. This can be done using a `tf.data` pipeline with `dataset.map()` and `tf.image.resize`.
+
+---
+
+## ✅ Classification Performance
+
+- **Dataset**: UNITY-Classification-B (47-class high-granularity labeling)
+- **Test Accuracy**: **94.2%** on the held-out test set
 
 ---
 
 ## ✅ Classes Covered
 
-47 standard echo views including:
+Echo2DClassifier is trained to predict **47 unique views** from echocardiographic scans.
 
-```
-a2ch-la, a2ch-lv, a2ch-full, a3ch-lv, a3ch-full, a3ch-la', a3ch-outflow,
-a4ch-ias, a4ch-la, a4ch-lv, a4ch-rv, a4ch-ra, a4ch-full, a5ch-full, a5ch-outflow,
-mmode-a4ch-rv, mmode-ivc, mmode-plax-mitral, mmode-plax-av, mmode-plax-lv,
-apex, psax-lv-mid, psax-lv-base, psax-tv, psax-all, psax-av, psax-lv-apex, psax-pv,
-plax-valves-av, plax-full-mv, plax-full-la, plax-full-out, plax-tv, plax-full-lv,
-plax-valves-mv, plax-full-rv-ao, suprasternal, subcostal-ivc, subcostal-heart,
-doppler-ao-descending, doppler-tissue-lateral, doppler-mv, doppler-av,
-doppler-tissue-septal, doppler-pv, doppler-tissue-rv, doppler-tv
-```
+👉 For full class breakdown and examples, see the full dataset description:  
+📄 [Download Word file](./dataset_description/Classification%20B%20Dataset%20-%20Detailed%20Description.docx)
 
 ---
 
@@ -47,17 +47,16 @@ model = Echo2DClassifier(pretrained=False)
 
 ---
 
-## 🔍 Model Summary
+## 📤 Source & Training
 
-```
-Xception base: 20.8M parameters
-Total model:   25.5M parameters
-```
+- **Dataset**: UNITY-Classification-B (47-class view-labeled echocardiographic dataset)
+- **Labeling**: Expert clinician-labeled 
+- **Training**: Preshen, IntSaV Research Group
 
 ---
 
-## 📤 Source & Training
+## 📎 Notes
 
-- Dataset: UNITY-Classification-B
-- Labels by: XXXX
-- Training by: XXXX
+- Model expects input shape of **(224, 224, 3)**.
+- You must resize images externally using `tf.image.resize()` or in your `tf.data` pipeline.
+- No resizing is performed inside the model itself.
