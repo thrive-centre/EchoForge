@@ -77,4 +77,4 @@ Non-trainable params: 16000 parameters
 ## 📤 Source
 
 - Dataset: EchoNet-Dynamic - https://echonet.github.io/dynamic/
-- Training by: XXXX
+- Training by: Arshian Hussain, THRIVE Research Centre

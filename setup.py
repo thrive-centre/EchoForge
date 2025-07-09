@@ -6,5 +6,5 @@ setup(
     packages=find_packages(),
     install_requires=["tensorflow>=2.10", "requests"],
     description="Echo2DClassifier - 47-class echocardiographic view classifier",
-    author="Mayur Agrawal"
+    author="XXXX"
 )
