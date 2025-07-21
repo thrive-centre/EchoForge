@@ -62,9 +62,9 @@ Below is the list of segmentation models included in this module:
 | Model Name     | Task             | Architecture | Dataset           | Dice Score | IoU Score | Link                                                 |
 |----------------|------------------|--------------|-------------------|------------|-----------|------------------------------------------------------|
 | **EchoLVSNet** | LV Segmentation  | U-Net        | EchoNet-Dynamic   | 0.91       | 0.85      | [View Model ➜](../echolvsnet/README.md)               |
-|                |                  |              | CAMUS             | –          | –         | [View Model ➡](../echolvsnet/README.md)              |
-|                |                  |              | HMC-QU            | –          | –         | [View Model ➡](../echolvsnet/README.md)              |
-|                |                  |              | UNITY             | –          | –         | [View Model ➡](..//echolvsnet/README.md)              |
+|                |                  |              | CAMUS             | –          | –         | [View Model ➜](../echolvsnet/README.md)               |
+|                |                  |              | HMC-QU            | –          | –         | [View Model ➜](../echolvsnet/README.md)               |
+|                |                  |              | UNITY             | –          | –         | [View Model ➜](../echolvsnet/README.md)               |
 | **Coming Soon**| XXXX             | XXXX         | EchoNet-Dynamic   | XXXX       | XXXX      | XXXX                                                 |
 |                |                  |              | CAMUS             | –          | –         | XXXX                                                 |
 |                |                  |              | HMC-QU            | –          | –         | XXXX                                                 |
