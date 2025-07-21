@@ -45,12 +45,16 @@ The following datasets have been used across classification models:
 
 ---
 
-## 🟢 Available
+## 🟢 Available 
 
-| Model Name           | Task                         | Architecture     | Accuracy | F1 Score | Link |
-|----------------------|------------------------------|------------------|----------|----------|------|
-| **Echo2DClassifier** | 2D View Classification        | ResNet50    | 94.2%    | 0.92     | [View Model ➜](../echo2dclassifier/README.md) |
-| **Coming Soon**      | Multi-Class Classification         | —                | —        | —        | [View Model ➜](../echo2dclassifier/README.md) |
+Below is the list of segmentation models included in this module:
+
+| Model Name         | Task             | Architecture | Dataset           | Accuracy | F1-Score | Link                                                 |
+|--------------------|------------------|--------------|-------------------|----------|----------|------------------------------------------------------|
+| **Echo2DClassifier** | 2D View Classification | ResNet50     | T-MED             | 94%      | 0.92 | [View Model ➜](../echo2dclassifier/README.md)   |
+|                      |                 |              | UNITY             | –        | –        | [View Model ➜](../echo2dclassifier/README.md)      |
+| **Coming Soon**     | XXXX             | XXXX         | T-MED             | XXXX     | XXXX     | XXXX                                                |
+|                    |                  |              | UNITY             | –        | –        | XXXX                                                 |
 
 ---
 

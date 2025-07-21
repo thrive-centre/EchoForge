@@ -48,7 +48,7 @@ The following datasets have been used across various models in this module:
 - [Link to dataset](https://www.kaggle.com/datasets/aysendegerli/hmcqu-dataset)
 
 ### 🏥 4. **UNITY**
-- Proprietary dataset annotated by EchoForge team
+- Proprietary dataset annotated by THRIVE Research Centre
 - Used for specific internal benchmarking
 
 > For detailed preprocessing steps and dataset-specific splits, see the individual model documentation.
@@ -59,10 +59,16 @@ The following datasets have been used across various models in this module:
 
 Below is the list of segmentation models included in this module:
 
-| Model Name       | Task                    | Architecture | Dice Score | IoU Score | Link |
-|------------------|-------------------------|--------------|------------|-----------|------|
-| **EchoLVSNet**   | LV segmentation (EchoNet) | U-Net        | 0.91       | 0.85      | [View Model ➜](../echolvsnet/README.md) |
-| **Coming Soon**  | XXXX                    | XXXX         | —          | —         | [View Model ➜](../echolvsnet/README.md) |
+| Model Name     | Task             | Architecture | Dataset           | Dice Score | IoU Score | Link                                                 |
+|----------------|------------------|--------------|-------------------|------------|-----------|------------------------------------------------------|
+| **EchoLVSNet** | LV Segmentation  | U-Net        | EchoNet-Dynamic   | 0.91       | 0.85      | [View Model ➡](./echolvsnet/README.md)              |
+|                |                  |              | CAMUS             | –          | –         | [View Model ➡](./echolvsnet/README.md)              |
+|                |                  |              | HMC-QU            | –          | –         | [View Model ➡](./echolvsnet/README.md)              |
+|                |                  |              | UNITY             | –          | –         | [View Model ➡](./echolvsnet/README.md)              |
+| **Coming Soon**| XXXX             | XXXX         | EchoNet-Dynamic   | XXXX       | XXXX      | XXXX                                                 |
+|                |                  |              | CAMUS             | –          | –         | XXXX                                                 |
+|                |                  |              | HMC-QU            | –          | –         | XXXX                                                 |
+|                |                  |              | UNITY             | –          | –         | XXXX                                                 |
 
 ---
 
