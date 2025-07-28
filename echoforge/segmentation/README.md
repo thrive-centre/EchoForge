@@ -24,9 +24,8 @@ Each model is tailored for specific tasks, views, and datasets.
 | Task | Description |
 |------|-------------|
 | LV Segmentation | Binary segmentation of the left ventricle from 2CH/4CH views |
-| XXXX Coming soon| XXXX |
-| XXXX Coming soon | XXXX |
-| XXXX Coming soon| XXXX |
+| Multi-Class Segmentation| Segmentation of left and right ventricle, Myocardium, etc |
+
 
 ## 📊 Datasets Used
 
@@ -61,10 +60,10 @@ Below is the list of segmentation models included in this module:
 
 | Model Name     | Task             | Architecture | Dataset           | Dice Score | IoU Score | Link                                                 |
 |----------------|------------------|--------------|-------------------|------------|-----------|------------------------------------------------------|
-| **EchoLVSNet** | LV Segmentation  | U-Net        | EchoNet-Dynamic   | 0.91       | 0.85      | [View Model ➜](../echolvsnet/README.md)               |
-|                |                  |              | CAMUS             | –          | –         | [View Model ➜](../echolvsnet/README.md)               |
-|                |                  |              | HMC-QU            | –          | –         | [View Model ➜](../echolvsnet/README.md)               |
-|                |                  |              | UNITY             | –          | –         | [View Model ➜](../echolvsnet/README.md)               |
+| **EchoLVSNet** | LV Segmentation  | U-Net        | EchoNet-Dynamic   | 0.91       | 0.85      | [View Model ➜](../models/echolvsnet/README.md)               |
+|                |                  |              | CAMUS             | 0.94        | 0.88       | [View Model ➜](../models/echolvsnet/README.md)               |
+|                |                  |              | HMC-QU            | –          | –         | [View Model ➜](../models/echolvsnet/README.md)               |
+|                |                  |              | UNITY             | –          | –         | [View Model ➜](../models/echolvsnet/README.md)               |
 | **Coming Soon**| XXXX             | XXXX         | EchoNet-Dynamic   | XXXX       | XXXX      | XXXX                                                 |
 |                |                  |              | CAMUS             | –          | –         | XXXX                                                 |
 |                |                  |              | HMC-QU            | –          | –         | XXXX                                                 |

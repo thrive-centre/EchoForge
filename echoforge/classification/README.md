@@ -51,8 +51,8 @@ Below is the list of segmentation models included in this module:
 
 | Model Name         | Task             | Architecture | Dataset           | Accuracy | F1-Score | Link                                                 |
 |--------------------|------------------|--------------|-------------------|----------|----------|------------------------------------------------------|
-| **Echo2DClassifier** | 2D View Classification | ResNet50     | T-MED             | 94%      | 0.92 | [View Model ➜](../echo2dclassifier/README.md)   |
-|                      |                 |              | UNITY             | –        | –        | [View Model ➜](../echo2dclassifier/README.md)      |
+| **Echo2DClassifier** | 2D View Classification | ResNet50     | T-MED             | 94%      | 0.92 | [View Model ➜](../models/echo2dclassifier/README.md)   |
+|                      |                 |              | UNITY             | –        | –        | [View Model ➜](../models/echo2dclassifier/README.md)      |
 | **Coming Soon**     | XXXX             | XXXX         | T-MED             | XXXX     | XXXX     | XXXX                                                |
 |                    |                  |              | UNITY             | –        | –        | XXXX                                                 |
 

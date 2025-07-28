@@ -27,9 +27,7 @@ pip install -e .
 
 ---
 
-## 🧠 Usage
-
-### Option 1: Generic Loader
+## Importing The Model 
 
 ```python
 from echoforge import load_model
@@ -37,44 +35,19 @@ from echoforge import load_model
 # Load any model by name from the registry
 model = load_model("Echo2DClassifier", pretrained=True)
 ```
+---
 
-### Option 2: Direct Import
+## 🧾 Current Model Portfolio
+- Classification [*View our classification module*](echoforge/classification/README.md)
+- Segmentation [*View our segmentation module*](echoforges/segmentation/README.md)
 
-```python
-from echoforge.models import Echo2DClassifier, EchoLVSNet
-
-model = Echo2DClassifier(pretrained=False)
-# or
-model = EchoLVSNet(pretrained=True)
-```
 
 ---
 
-## 📂 Available Models
-
-| Model Name           | Task                    | Status       |
-|----------------------|-------------------------|--------------|
-| [Echo2DClassifier](./echoforge/models/echo2dclassifier/README.md) | 2D View Classification | ✅ Released |
-| [EchoLVSNet](./echoforge/models/echolvsnet/README.md)            | LV Segmentation         | ✅ Released |
-| EchoLandmarker       | Landmark Detection      | 🔜 Coming soon |
-
----
-
-## 🚧 Roadmap
-
-- [x] 2D View Classification (Echo2DClassifier)
-- [x] Left Ventricular Segmentation (EchoLVSNet)
-- [ ] Landmark Detection (EchoLandmarker)
-- [ ] Timing Estimation & Quality Prediction
-- [ ] Model Benchmarking Suite
-- [ ] PyPI Package Release
-- [ ] Interactive Web Demo
-
----
 
 ## 👥 Credits
 
-- Developed by: XXXXX
+- Developed by: THRIVE 
 - Research Group: **IntSaV, Thrive Research Center**
 - Clinical Collaboration: XXXXX
 

@@ -146,7 +146,6 @@ tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid', name='output')(d5)
 
 - **Mean Dice Coefficient:** 0.92
 - **IoU score:** 0.85
-- **Pixel-wise Accuracy:** 0.98
 
 ---
 
@@ -171,5 +170,12 @@ Non-trainable params: 16000 parameters
 ## 📤 Source
 
 - Dataset: EchoNet-Dynamic - https://echonet.github.io/dynamic/
-- Training by: Arshian Hussain, THRIVE Research Centre
+- Training by: THRIVE Research Centre
 
+## 📎 Notes
+- The model expects input images of shape (512, 512, 1), representing single-channel grayscale data typically used in echocardiographic imaging. The output is also single-channel, suitable for binary segmentation tasks.
+
+- A custom learning rate scheduler (WarmUpCosine) is used, which is not built into the standard Keras API. Attempting to load the model with compile=True may trigger the following error:
+Unknown decay: 'WarmUpCosine'.
+
+- To avoid this, load the model with compile=False, then manually compile it using your own optimizer, learning rate, and loss configuration.
