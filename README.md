@@ -39,7 +39,7 @@ model = load_model("Echo2DClassifier", pretrained=True)
 
 ## 🧾 Current Model Portfolio
 - Classification [*View our classification module*](echoforge/classification/README.md)
-- Segmentation [*View our segmentation module*](echoforges/segmentation/README.md)
+- Segmentation [*View our segmentation module*](echoforge/segmentation/README.md)
 
 
 ---
