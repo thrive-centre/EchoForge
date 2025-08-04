@@ -60,16 +60,16 @@ Below is the list of segmentation models included in this module:
 
 ## 🔍 Explore Other Modules in EchoForge:
 - [Segmentation](../segmentation/README.md)
-- [Phase Detection](../phase-detection/README.md)
-- [View Recognition](../view-recognition/README.md)
+- [Phase Detection](../phasedetection/README.md)
 
 ---
 
 ## 📜 License
 
 CC BY-NC-SA 4.0  
-See the [LICENSE](../../license/LICENSE.txt) file for details.
+See the [LICENSE](../license/LICENSE.txt) file for details.
 
 ---
 
-_This is part of the THRIVE Research Centre [view EchoForge](https://github.com/EchoForge) project ecosystem._
+_This is part of the THRIVE Research Centre [view EchoForge](../README.md) project ecosystem._
+
