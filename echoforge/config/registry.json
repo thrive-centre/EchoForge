@@ -1,7 +1,8 @@
 {
   "Echo2DClassifier": {
         "repo_id": "thrive-2025/Echo2DClassifier",
-    "filename": "model_run0_perc.h5"
+        "filename": "model_run0_perc84.h5"
+
   },
   "EchoLVSNet": {
         "repo_id": "thrive-2025/echolvsnet",
