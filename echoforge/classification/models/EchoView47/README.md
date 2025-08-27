@@ -2,7 +2,7 @@
 
 **EchoView47** is a deep learning model designed for echocardiographic
 view classification. It has been trained on the **TTE47 dataset**,
-covering **47 echocardiographic views**, and achieves **94.3%
+covering **47 echocardiographic views**, and achieves **94.1%
 accuracy on the TTE47 test split**.
 
 The model is available in two forms:
@@ -124,7 +124,7 @@ You can find more details about the dataset (including the gallery of classes, d
 
 | Dataset | Evaluation | Accuracy |
 |---------|------------|----------|
-| **TTE47 (Test Split)** | Overall Accuracy | **94.3%** |
+| **TTE47 (Test Split)** | Overall Accuracy | **94.1%** |
 | **TMED2** | Fold 0 | 98.10% |
 |         | Fold 1 | 98.17% |
 |         | Fold 2 | 97.81% |
