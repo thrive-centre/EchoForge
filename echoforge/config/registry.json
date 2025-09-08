@@ -1,7 +1,17 @@
 {
-  "Echo2DClassifier": {
-        "repo_id": "thrive-2025/Echo2DClassifier",
-        "filename": "model_run0_perc84.h5"
+  "EchoView47_contrastive_encoder": {
+        "repo_id": "thrive-2025/EchoView47",
+        "filename": "TTE_47_Contrastive_Encoder.h5"
+
+  },
+  "EchoView47_classifier": {
+        "repo_id": "thrive-2025/EchoView47",
+        "filename": "TTE47_Classifier_Model.h5"
+
+  },
+  "EchoView47_TMED2": {
+        "repo_id": "thrive-2025/test_echoforge",
+        "filename": "model_run0_perc.h5"
 
   },
   "EchoLVSNet": {

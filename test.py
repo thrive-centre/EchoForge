@@ -23,11 +23,11 @@ def compare_weights(model1, model2, num_layers=3):
 
 if __name__ == "__main__":
     print("Loading model with pretrained=True")
-    model_pretrained = load_model("Echo2DClassifier", pretrained=True)
+    model_pretrained = load_model("EchoView47_classifierr", pretrained=True)
     model_pretrained.summary()
 
     print("\nLoading model with pretrained=False")
-    model_fresh = load_model("Echo2DClassifier", pretrained=False)
+    model_fresh = load_model("EchoView47_classifier", pretrained=False)
     model_fresh.summary()
 
     compare_weights(model_pretrained, model_fresh)
