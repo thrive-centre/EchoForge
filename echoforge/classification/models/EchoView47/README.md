@@ -140,6 +140,46 @@ You can find more details about the dataset (including the gallery of classes, d
 - **Reproducibility:** JSON files (`class_lookup.json`, `data_split.json`) provided to align predictions with official labels and splits
 - **Training:** Preshen Naidoo, Thrive Centre
 
+
+---
+
+## Import EchoView47 Contrastive Encoder 
+
+```python
+from echoforge import load_model
+
+# Load any model by name from the registry
+model = load_model("EchoView47_contrastive_encoder", pretrained=True)
+```
+
+---
+
+---
+
+## Import EchoView47 Classifier 
+
+```python
+from echoforge import load_model
+
+# Load any model by name from the registry
+model = load_model("EchoView47_classifier", pretrained=True)
+```
+
+---
+
+---
+
+## Import EchoView47 TMED2 Classifier 
+
+```python
+from echoforge import load_model
+
+# Load any model by name from the registry
+model = load_model("EchoView47_TMED2", pretrained=True)
+```
+
+---
+
 ## 📝 Notes  
 
 - The model expects input images of shape **(224, 224, 3)**.  

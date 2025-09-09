@@ -34,9 +34,9 @@
 import os
 import json
 from huggingface_hub import hf_hub_download
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 def download_model(model_name, save_path="~/.echoforge/models"):
     save_path = os.path.expanduser(save_path)

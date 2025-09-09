@@ -33,7 +33,7 @@ pip install -e .
 from echoforge import load_model
 
 # Load any model by name from the registry
-model = load_model("Echo2DClassifier", pretrained=True)
+model = load_model("EchoView47_classifier", pretrained=True)
 ```
 ---
 
