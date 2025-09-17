@@ -17,6 +17,10 @@
   "EchoLVSNet": {
         "repo_id": "thrive-2025/echolvsnet",
     "filename": "best_finetuned_model_1.h5"
+  },
+  "EchoSDNet": {
+        "repo_id": "thrive-2025/EchoSDNet",
+    "filename": "Single_Dual_Classification.h5"
   }
 }
 
