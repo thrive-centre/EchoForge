@@ -30,7 +30,7 @@ EchoSDNet employs a **ResNet50 backbone** (pre-trained on ImageNet) with a custo
 
 **ResNet50 Backbone**  
   - Functions as a feature extractor  
-  - Only the final block (conv5) unfrozen for fine-tuning  
+  - Only the **final block (conv5)** unfrozen for fine-tuning  
   - Residual blocks with skip connections mitigate vanishing gradients  
 
 **Custom Classification Head**  
@@ -118,11 +118,22 @@ Built from **bottleneck residual blocks** (1×1 → 3×3 → 1×1 with identity/
 
 ---
 
+## Import EchoSDNet  
+
+```python
+from echoforge import load_model
+
+# Load any model by name from the registry
+model = load_model("EchoSDNet", pretrained=True)
+```
+
+---
+
 ## Notes
 
 - EchoSDNet demonstrates **state-of-the-art performance** for binary classification of echocardiographic views.  
 - Importantly, **no dual-view frames were misclassified**, reducing clinical risk in downstream workflows.  
-- The model was evaluated only on UNITY data. 
+- The model was evaluated **only** on UNITY data. 
 - By providing a reliable distinction between single and dual views, EchoSDNet supports **standardisation, reproducibility, and clinical integration** of automated echo analysis pipelines.  
 
 
