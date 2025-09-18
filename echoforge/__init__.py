@@ -1,6 +1,5 @@
 
 from .segmentation.models.echolvsnet.echolvsnet import build_echolvsnet
-
 from .classification.models.EchoView47.EchoView47_contrastive_encoder import build_echoview47_contrastive_encoder
 from .classification.models.EchoView47.EchoView47_classifier import build_echoview47_classifier
 from .classification.models.EchoView47.EchoView47_TMED2 import build_echoview47_tmed2
