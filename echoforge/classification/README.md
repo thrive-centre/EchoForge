@@ -50,9 +50,9 @@ Below is the list of classification models included in this module:
 
 | Model Name     | Task                   | Architecture             | Dataset | Accuracy | F1-Score | Link                                                  |
 |----------------|------------------------|--------------------------|---------|----------|----------|-------------------------------------------------------|
-| **EchoView47** | 2D View Classification | ResNet50                 | UNITY   | 94.1%    | 0.92     | [View Model ➜](../models/EchoView47/README.md)       |
-|                |                        |                          | T-MED   | 98.03%   | –        | [View Model ➜](../models/EchoView47/README.md)       |
-| **EchoSDNet**  | Binary Classification  | ResNet50 + Custom Layers | UNITY   | 99.48%   | 0.99     | [View Model ➜](../models/EchoSDNet/README.md)        |
+| **EchoView47** | 2D View Classification | ResNet50                 | UNITY   | 94.1%    | 0.92     | [View Model ➜](models/EchoView47/README.md)       |
+|                |                        |                          | T-MED   | 98.03%   | –        | [View Model ➜](models/EchoView47/README.md)       |
+| **EchoSDNet**  | Binary Classification  | ResNet50 + Custom Layers | UNITY   | 99.48%   | 0.99     | [View Model ➜](models/EchoSDNet/README.md)        |
 
 
 
