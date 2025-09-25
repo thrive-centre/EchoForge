@@ -52,9 +52,9 @@ Below is the list of phase detection models currently supported in this module:
 
 | Model Name   | Task                 | Architecture         | Dataset          | ED aaFD | ES aaFD | Link         |
 |--------------|----------------------|-----------------------|------------------|---------|---------|--------------|
-| **EchoPDNet**| ED/ES Frame Regression | ResNet50 + 2x-LSTM  | PACS             | 0.66    | 0.81    | [View Model ➜](/models/echopdnet/README.md)        |
-|              |                      |                       | MultiBeat        | 2.62    | 1.86    | [View Model ➜](/models/echopdnet/README.md)        |
-|              |                      |                       | EchoNet-Dynamic  | 2.30    | 3.49    | [View Model ➜](/models/echopdnet/README.md)        |
+| **EchoPDNet**| ED/ES Frame Regression | ResNet50 + 2x-LSTM  | PACS             | 0.66    | 0.81    | [View Model ➝](/phasedetection/models/echopdnet/README.md)  |
+|              |                      |                       | MultiBeat        | 2.62    | 1.86    | [View Model ➝](/phasedetection/models/echopdnet/README.md)      |
+|              |                      |                       | EchoNet-Dynamic  | 2.30    | 3.49    | [View Model ➝](/phasedetection/models/echopdnet/README.md)       |
 
 ---
 
@@ -71,4 +71,4 @@ See the [LICENSE](../license/LICENSE.txt) file for details.
 
 ---
 
-_This is part of the THRIVE Research Centre [view EchoForge](../README.md) project ecosystem._
+_This is part of the THRIVE Research Centre [view EchoForge](../../README.md) project ecosystem._

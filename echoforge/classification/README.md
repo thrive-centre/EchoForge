@@ -71,5 +71,4 @@ See the [LICENSE](../license/LICENSE.txt) file for details.
 
 ---
 
-_This is part of the THRIVE Research Centre [view EchoForge](../README.md) project ecosystem._
-
+_This is part of the THRIVE Research Centre [view EchoForge](../../README.md) project ecosystem._
