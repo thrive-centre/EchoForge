@@ -22,7 +22,6 @@ The models in this module cover tasks such as:
 |------------------------------|-------------|
 | View Classification          | Identify the anatomical view (e.g., A4C, PLAX) from 2D echo |
 | Phase Classification         | Classify frames or sequences into systole/diastole |
-| Binary Disease Classification | Classify presence/absence of specific cardiac pathology |
 | Multi-class Classification   | Predict multiple classes or labels simultaneously |
 
 ---
@@ -47,14 +46,15 @@ The following datasets have been used across classification models:
 
 ## 🟢 Available 
 
-Below is the list of segmentation models included in this module:
+Below is the list of classification models included in this module:
 
-| Model Name         | Task             | Architecture | Dataset           | Accuracy | F1-Score | Link                                                 |
-|--------------------|------------------|--------------|-------------------|----------|----------|------------------------------------------------------|
-| **Echo2DClassifier** | 2D View Classification | ResNet50     | T-MED             | 94%      | 0.92 | [View Model ➜](../models/echo2dclassifier/README.md)   |
-|                      |                 |              | UNITY             | –        | –        | [View Model ➜](../models/echo2dclassifier/README.md)      |
-| **Coming Soon**     | XXXX             | XXXX         | T-MED             | XXXX     | XXXX     | XXXX                                                |
-|                    |                  |              | UNITY             | –        | –        | XXXX                                                 |
+| Model Name     | Task                   | Architecture             | Dataset | Accuracy | F1-Score | Link                                                  |
+|----------------|------------------------|--------------------------|---------|----------|----------|-------------------------------------------------------|
+| **EchoView47** | 2D View Classification | ResNet50                 | UNITY   | 94.1%    | 0.92     | [View Model ➜](../models/EchoView47/README.md)       |
+|                |                        |                          | T-MED   | 98.03%   | –        | [View Model ➜](../models/EchoView47/README.md)       |
+| **EchoSDNet**  | Binary Classification  | ResNet50 + Custom Layers | UNITY   | 99.48%   | 0.99     | [View Model ➜](../models/EchoSDNet/README.md)        |
+
+
 
 ---
 

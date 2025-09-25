@@ -47,9 +47,9 @@ model = load_model("EchoView47_classifier", pretrained=True)
 
 ## 👥 Credits
 
-- Developed by: THRIVE 
-- Research Group: **IntSaV, Thrive Research Center**
-- Clinical Collaboration: XXXXX
+- Developed by: **THRIVE Centre**
+- Research Group: **Intelligent Sensing and Vision**
+- Clinical Collaboration: **Faculty of Medicine, Imperial College London**
 
 ---
 
