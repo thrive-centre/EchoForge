@@ -144,8 +144,13 @@ tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid', name='output')(d5)
 
 ### 📈 Results - Test Set
 
-- **Mean Dice Coefficient:** 0.92
-- **IoU score:** 0.85
+| Dataset         | Dice Score | IoU Score   |
+|-----------------|-------------|------------|
+| EchoNet-Dynamic | 0.91        | 0.85       |
+| CAMUS           | 0.94        | 0.88       |
+| HMC-QU          | –           | –          |
+| UNITY           | 0.90        | 0.83       |
+
 
 ---
 
