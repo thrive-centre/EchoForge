@@ -180,6 +180,29 @@ model = load_model("EchoView47_TMED2", pretrained=True)
 
 ---
 
+---
+
+## Import baseline classifiers trained on TTE47 (without contrastive pretraining) 
+
+```python
+from echoforge import load_model
+
+
+# Example: Load Xception baseline model
+model = load_model("Xception_TTE47_baseline", pretrained=True)
+
+# Other available models include:
+# - SwinTransformerV2_TTE47_baseline
+# - EfficientNetV2_TTE47_baseline
+# - ViT_TTE47_baseline
+# - ConvNeXt_TTE47_baseline
+# - DenseNet121_TTE47_baseline
+# - ResNet50_TTE47_baseline
+# - ResNet101_TTE47_baseline
+```
+
+---
+
 ## 📝 Notes  
 
 - The model expects input images of shape **(224, 224, 3)**.  
