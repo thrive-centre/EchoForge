@@ -12,9 +12,7 @@ Echocardiographic segmentation is critical for:
 
 The models in this module are trained to segment structures such as:
 - **Left Ventricle (LV)**
-- **Right Ventricle (RV)**
-- **Myocardium**
-- **Aortic Valve**
+
 
 Each model is tailored for specific tasks, views, and datasets.
 
