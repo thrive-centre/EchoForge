@@ -52,8 +52,8 @@ The following datasets have been used across various models in this module:
 
 ---
 
-## 🟢 Available 
-
+<!-- ## 🟢 Available  -->
+<!-- 
 Below is the list of segmentation models included in this module:
 
 | Model Name     | Task             | Architecture | Dataset           | Dice Score | IoU Score | Link                                                 |
@@ -61,8 +61,14 @@ Below is the list of segmentation models included in this module:
 | **EchoLVSNet** | LV Segmentation  | U-Net        | EchoNet-Dynamic   | 0.91       | 0.85      | [View Model ➜](models/echolvsnet/README.md)               |
 |                |                  |              | CAMUS             | 0.94        | 0.88       | [View Model ➜](models/echolvsnet/README.md)               |
 |                |                  |              | HMC-QU            | –          | –         | [View Model ➜](models/echolvsnet/README.md)               |
-|                |                  |              | UNITY             | 0.90         | 0.83        | [View Model ➜](models/echolvsnet/README.md)               |
+|                |                  |              | UNITY             | 0.90         | 0.83        | [View Model ➜](models/echolvsnet/README.md)               | -->
 
+## Available
+
+| **Model** | **Task** | **Architecture** | [**EchoNet-Dynamic**](https://echonet.github.io/dynamic/) | [**CAMUS**](https://www.creatis.insa-lyon.fr/Challenge/camus/) | [**HMC-QU**](https://www.kaggle.com/datasets/aysendegerli/hmcqu-dataset) | [**UnityLV-MultiX**](https://www.thrive-centre.com/datasets/UnityLV-MultiX) |
+|----------|----------|------------------|----------------------|------------|-------------|-------------|
+| | | | **Dice / IoU** | **Dice / IoU** | **Dice / IoU** | **Dice / IoU / EF / Volume** | |
+| [**EchoLVSNet**](models/echolvsnet/README.md) | LV Segmentation | U-Net | 0.91 / 0.85 | 0.94 / 0.88 | – / – | 0.92 / 0.85 / – / – |
 
 ---
 
