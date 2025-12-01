@@ -4,6 +4,19 @@
 
 The library is built using TensorFlow/Keras and integrates with models hosted on Hugging Face. It is designed for researchers, clinicians, and ML developers working with cardiac ultrasound imaging.
 
+
+**From View Classification to Segmentation and Timing Detection — All in One Library**
+
+#### View Classification  
+![Echocardiographic View Classification](echoforge/images/classificaiton.png)
+
+#### LV Segmentation  
+![Chamber Segmentation in Echo Images](echoforge/images/segmentaion.gif)
+
+#### Phase Detection (ED vs ES Labelling)  
+![Phase Detection](echoforge/images/pacs-examples.png)
+
+
 ---
 
 ## 🔧 Features
