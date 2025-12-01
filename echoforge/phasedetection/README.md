@@ -47,14 +47,18 @@ The following datasets are used for training and external evaluation of phase de
 ---
 
 ## 🟢 Available
-Below is the list of phase detection models currently supported in this module:
+Below is the list of phase detection model currently supported in this module:
 
+| **Model**     | **Task**                 | **Architecture**       | **PACS (ED/ES)** | **MultiBeat (ED/ES)** | **EchoNet-Dynamic (ED/ES)** |
+|---------------|--------------------------|-------------------------|------------------|------------------------|-----------------------------|
+| [**EchoPDNet**](/phasedetection/models/echopdnet/README.md) | ED/ES Frame Regression | ResNet50 + 2x-LSTM     | 0.66 / 0.81        | 2.62 / 1.86            | 2.30 / 3.49                  | 
 
+<!-- 
 | Model Name   | Task                 | Architecture         | Dataset          | ED aaFD | ES aaFD | Link         |
 |--------------|----------------------|-----------------------|------------------|---------|---------|--------------|
 | **EchoPDNet**| ED/ES Frame Regression | ResNet50 + 2x-LSTM  | PACS             | 0.66    | 0.81    | [View Model ➝](/phasedetection/models/echopdnet/README.md)  |
 |              |                      |                       | MultiBeat        | 2.62    | 1.86    | [View Model ➝](/phasedetection/models/echopdnet/README.md)      |
-|              |                      |                       | EchoNet-Dynamic  | 2.30    | 3.49    | [View Model ➝](/phasedetection/models/echopdnet/README.md)       |
+|              |                      |                       | EchoNet-Dynamic  | 2.30    | 3.49    | [View Model ➝](/phasedetection/models/echopdnet/README.md)       | -->
 
 ---
 
