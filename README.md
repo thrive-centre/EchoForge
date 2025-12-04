@@ -29,15 +29,53 @@ The library is built using TensorFlow/Keras and integrates with models hosted on
 - Caches downloaded models locally to avoid repeated downloads
 
 ---
-
+<!-- 
 ## 📦 Installation
 
 ```bash
 git clone https://github.com/intsav/EchoForge.git
 cd EchoForge
 pip install -e .
+``` -->
+## 📦 Installation
+
+EchoForge can be installed in two ways depending on your workflow:  
+a standard local installation, or installation inside a TensorFlow Docker/Jupyter environment.
+
+---
+
+### 🔧 Standard Installation (Local / Virtual Environment)
+
+Use this option if you are installing EchoForge on your own machine or in a Python virtual environment.
+
+```bash
+git clone https://github.com/thrive-centre/EchoForge.git
+cd EchoForge
+pip install -e .
+```
+This installs EchoForge in editable mode, allowing you to update the source code and test changes instantly.
+
+## 🐋 Installation Inside a TensorFlow Docker (GPU + Jupyter)
+
+If you're running EchoForge inside a TensorFlow Docker container such as:
+
+```bash
+tensorflow/tensorflow:2.13.0-gpu-jupyter
 ```
 
+then install it using the following commands inside your notebook or container terminal:
+
+```bash
+# Clone the EchoForge repository
+!git clone https://github.com/thrive-centre/EchoForge.git
+
+# Install EchoForge from the mounted directory
+!pip install -e /tf/notebooks/EchoForge
+```
+
+>Note:
+Update the path /tf/notebooks/EchoForge if your directory structure differs.
+This is simply where your repo is located inside the container.
 ---
 
 ## Importing The Model 

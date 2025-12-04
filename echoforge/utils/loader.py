@@ -1,72 +1,42 @@
-# import os
-# import json
-# from huggingface_hub import hf_hub_download
-# from dotenv import load_dotenv
-
-# load_dotenv()  # Load HF_TOKEN from .env if it exists
-
-# def download_model(model_name, save_path="~/.echoforge/models"):
-#     save_path = os.path.expanduser(save_path)
-#     os.makedirs(save_path, exist_ok=True)
-
-#     with open(os.path.join(os.path.dirname(__file__), '../config/registry.json')) as f:
-#         registry = json.load(f)
-
-#     filename = registry[model_name]["filename"]
-#     repo_id = registry[model_name]["repo_id"]
-#     token = os.environ.get("HF_TOKEN")
-
-#     local_path = os.path.join(save_path, filename)
-
-#     if not os.path.exists(local_path):
-#         print(f" Downloading {filename} from Hugging Face (private repo)...")
-#         downloaded_path = hf_hub_download(
-#             repo_id=repo_id,
-#             filename=filename,
-#             cache_dir=save_path,
-#             token=token
-#         )
-#         os.rename(downloaded_path, local_path)
-
-#     return local_path
-
-
 import os
 import json
+import shutil
 from huggingface_hub import hf_hub_download
-# from dotenv import load_dotenv
 
-# load_dotenv()
-
-def download_model(model_name, save_path="~/.echoforge/models"):
-    save_path = os.path.expanduser(save_path)
+def download_model(model_name):
+    # ✅ Use env var if set, else default
+    save_path = os.environ.get("ECHOFORGE_MODEL_DIR", "~/.echoforge/models")
+    save_path = os.path.expanduser(save_path)  # expand ~ if needed
     os.makedirs(save_path, exist_ok=True)
 
-    # Load registry
-    with open(os.path.join(os.path.dirname(__file__), '../config/registry.json')) as f:
+    # Load registry.json
+    registry_path = os.path.join(os.path.dirname(__file__), "../config/registry.json")
+    with open(registry_path) as f:
         registry = json.load(f)
 
-    # Get model details
+    # Get model info
     filename = registry[model_name]["filename"]
     repo_id = registry[model_name]["repo_id"]
     token = os.environ.get("HF_TOKEN")
 
-    # Check if model already exists locally
+    # Final file path
     local_path = os.path.join(save_path, filename)
+
+    # ✅ If already downloaded, return
     if os.path.exists(local_path):
-        print(" Model already cached locally.")
+        print(" Model already cached locally:", local_path)
         return local_path
 
-    # Otherwise, download it
-    print(" Downloading model from Hugging Face...")
+    # ⬇️ Otherwise download
+    print("⬇  Downloading model from Hugging Face...")
     downloaded_path = hf_hub_download(
         repo_id=repo_id,
         filename=filename,
-        cache_dir=save_path,
         token=token
     )
 
-    # Move from cache to final location
-    os.rename(downloaded_path, local_path)
+    # ✅ Copy to ECHOFORGE_MODEL_DIR
+    print(f" Saving model to: {local_path}")
+    shutil.copy(downloaded_path, local_path)
 
     return local_path
