@@ -1,4 +1,3 @@
-import os
 import tensorflow as tf
 from echoforge.utils.loader import download_model
 
