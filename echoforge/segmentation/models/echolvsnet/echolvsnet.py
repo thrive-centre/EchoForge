@@ -1,7 +1,12 @@
 import tensorflow as tf
 from echoforge.utils.loader import download_model
 
-def build_echolvsnet(input_shape=(512, 512, 1), pretrained=True):
+def build_echolvsnet(
+        input_shape=(512, 512, 1), 
+        encoder_filters=[32, 64, 128, 256, 512], 
+        bottleneck_filters=1024, 
+        pretrained=True,
+):
     """
     Builds or loads the EchoLVSNet U-Net architecture.
 
@@ -49,20 +54,20 @@ def build_echolvsnet(input_shape=(512, 512, 1), pretrained=True):
     inputs = tf.keras.Input(shape=input_shape)
     x = tf.keras.layers.Rescaling(1./255)(inputs)
 
-    f1, p1 = encoder_block(x, 32)
-    f2, p2 = encoder_block(p1, 64)
-    f3, p3 = encoder_block(p2, 128)
-    f4, p4 = encoder_block(p3, 256)
-    f5, p5 = encoder_block(p4, 512)
+    skips = []
+    # Encoder Pass
+    for f in encoder_filters:
+        skip, x = encoder_block(x, f)
+        skips.append(skip)
 
-    b = conv_block(p5, 1024)
+    # Bottleneck layer
+    x = conv_block(x, bottleneck_filters)
 
-    d1 = decoder_block(b, f5, 512)
-    d2 = decoder_block(d1, f4, 256)
-    d3 = decoder_block(d2, f3, 128)
-    d4 = decoder_block(d3, f2, 64)
-    d5 = decoder_block(d4, f1, 32)
+    # Decoder Pass
+    for f in reversed(encoder_filters):
+        skip = skips.pop()
+        x = decoder_block(x, skip, f)
 
-    outputs = tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid', name='output')(d5)
+    outputs = tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid', name='output')(x)
 
     return tf.keras.Model(inputs=inputs, outputs=outputs, name="EchoLVSNet")
