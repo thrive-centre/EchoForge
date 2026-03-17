@@ -1,23 +1,23 @@
-# EchoView47 
+# EchoFine 
 
-**EchoView47** is a deep learning model designed for echocardiographic
+**EchoFine** is a deep learning model designed for echocardiographic
 view classification. It has been trained on the **TTE47 dataset**,
 covering **47 echocardiographic views**, and achieves **94.1%
 accuracy on the TTE47 test split**.
 
 The model is available in two forms:
-- **EchoView47 Contrastive Encoder** - a pretrained encoder built on
+- **EchoFine Contrastive Encoder** - a pretrained encoder built on
 **Xception**, trained using a contrastive learning framework with LogSum
 loss on TTE47.
-- **EchoView47 Classifier** - a fine-tuned 47-class classifier obtained
+- **EchoFine Classifier** - a fine-tuned 47-class classifier obtained
 by training the encoder further with **Cross-Entropy loss**.
 
-With its strong performance, EchoView47 can serve as both:
+With its strong performance, EchoFine can serve as both:
 - A **feature extractor** for downstream echocardiography tasks, and
 - A **ready-to-use classifier** for automated view classification.
 
 --- 
-## EchoView47 Contrastive Encoder (Pretrained Encoder)
+## EchoFine Contrastive Encoder (Pretrained Encoder)
 
 | Layer (type)              | Output Shape        | Param #   |
 |----------------------------|---------------------|-----------|
@@ -46,7 +46,7 @@ With its strong performance, EchoView47 can serve as both:
   - **Output:** A compact feature representation of size **(2048, )**.  
 ---
 
-## EchoView47 Classifier (Fine-Tuned 47-class Classifier)
+## EchoFine Classifier (Fine-Tuned 47-class Classifier)
 
 | Layer (type)               | Output Shape        | Param #   |
 |-----------------------------|---------------------|-----------|
@@ -73,7 +73,7 @@ With its strong performance, EchoView47 can serve as both:
     
 --- 
 
-## TMED2 Classifier (EchoView47 Fine-Tuned on TMED2)
+## TMED2 Classifier (EchoFine Fine-Tuned on TMED2)
 
 Pretrained with our Contrastive Framework using the LogSum Loss on **TTE47** and fine-tuned on **TMED2 (DEV479 splits)** with Cross-Entropy Loss:  
 
@@ -100,7 +100,7 @@ The test set was intentionally sized to balance **comprehensive evaluation acros
 
 ### Dataset Splits & Metadata  
 
-To support reproducibility and consistency across experiments, two key JSON files are provided (available for download on the **'datasplits' directory under EchoView47**):  
+To support reproducibility and consistency across experiments, two key JSON files are provided (available for download on the **'datasplits' directory under EchoFine**):  
 
 - **`class_lookup.json`**  
   - Maps the classifier’s output indexes to the corresponding **echocardiographic view names**.  
@@ -143,39 +143,49 @@ You can find more details about the dataset (including the gallery of classes, d
 
 ---
 
-## Import EchoView47 Contrastive Encoder 
+## Import EchoFine Contrastive Encoder 
 
 ```python
 from echoforge import load_model
 
 # Load any model by name from the registry
-model = load_model("EchoView47_contrastive_encoder", pretrained=True)
+model = load_model("EchoFine_contrastive_encoder", pretrained=True)
+
+# Other available models include:
+# -SwinTransformerV2-T
+# -ConvNeXt-T
+# -ViT-S
 ```
 
 ---
 
 ---
 
-## Import EchoView47 Classifier 
+## Import EchoFine Classifier 
 
 ```python
 from echoforge import load_model
 
 # Load any model by name from the registry
-model = load_model("EchoView47_classifier", pretrained=True)
+model = load_model("EchoFine_classifier", pretrained=True)
+
+# Other available models include:
+# -SwinTransformerV2-T
+# -ConvNeXt-T
+# -ViT-S
 ```
 
 ---
 
 ---
 
-## Import EchoView47 TMED2 Classifier 
+## Import EchoFine TMED2 Classifier 
 
 ```python
 from echoforge import load_model
 
 # Load any model by name from the registry
-model = load_model("EchoView47_TMED2", pretrained=True)
+model = load_model("EchoFine_TMED2", pretrained=True)
 ```
 
 ---
@@ -199,6 +209,9 @@ model = load_model("Xception_TTE47_baseline", pretrained=True)
 # - DenseNet121_TTE47_baseline
 # - ResNet50_TTE47_baseline
 # - ResNet101_TTE47_baseline
+# -SwinTransformerV2-T_TTE47_baseline
+# -ConvNeXt-T_TTE47_baseline
+# -ViT-S_TTE47_baseline
 ```
 
 ---
@@ -209,7 +222,9 @@ model = load_model("Xception_TTE47_baseline", pretrained=True)
 - The `class_lookup.json` file is required to map classifier outputs to echocardiographic view names.  
 - Use the official `data_split.json` to ensure reproducible training, validation, and testing.  
   
+## References
 
+- [Robust fine-grained echocardiographic view classification with supervised contrastive learning](https://www.sciencedirect.com/science/article/pii/S1361841526000757)
 
 
  
