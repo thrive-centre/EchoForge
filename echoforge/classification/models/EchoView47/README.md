@@ -118,7 +118,7 @@ To support reproducibility and consistency across experiments, two key JSON file
 
 ### Link to Dataset
 
-You can find more details about the dataset (including the gallery of classes, demographics, and splits) on the official dataset page: [TTE47 — Dataset Card & Reference Gallery (Thrive Centre)](https://www.thrive-centre.com/datasets/TTE47/)  
+You can find more details about the dataset (including the gallery of classes, demographics, and splits) on the official dataset page: [TTE47 — Dataset Card & Reference Gallery (Thrive Centre)](https://www.thrive-centre.com/datasets/TTE47)  
 
 ## 📊 Results  
 
@@ -132,7 +132,7 @@ You can find more details about the dataset (including the gallery of classes, d
 
 ## 📂 Source & Training  
 
-- **Dataset:** [TTE47](https://www.thrive-centre.com/datasets/TTE47/) (91,139 echocardiographic images across 47 labeled views)  
+- **Dataset:** [TTE47](https://www.thrive-centre.com/datasets/TTE47) (91,139 echocardiographic images across 47 labeled views)  
 - **Labeling:** Expert cardiologist annotations (multi-expert validation for test set)  
 - **Splits:** Official training (76,589), validation (9,103), and test (5,447) with no patient overlap  
 - **Image Size:** Resized to **224 × 224 × 3** for model compatibility  
