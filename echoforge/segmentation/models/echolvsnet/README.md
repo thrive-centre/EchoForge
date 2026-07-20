@@ -179,11 +179,8 @@ Non-trainable params: 16000 parameters
 
 ## 📎 Notes
 > The pretrained LV segmentation model currently supports **A4C (4CH) echocardiographic images only**.
-
 > Using the model on A2C (2CH) images or other cardiac views is expected to produce poor segmentation performance and is not supported by the reported evaluation results.
-- The model expects input images of shape (512, 512, 1), representing single-channel grayscale data typically used in echocardiographic imaging. The output is also single-channel, suitable for binary segmentation tasks.
-
-- A custom learning rate scheduler (WarmUpCosine) is used, which is not built into the standard Keras API. Attempting to load the model with compile=True may trigger the following error:
+> The model expects input images of shape (512, 512, 1), representing single-channel grayscale data typically used in echocardiographic imaging. The output is also single-channel, suitable for binary segmentation tasks.
+> A custom learning rate scheduler (WarmUpCosine) is used, which is not built into the standard Keras API. Attempting to load the model with compile=True may trigger the following error:
 Unknown decay: 'WarmUpCosine'.
-
-- To avoid this, load the model with compile=False, then manually compile it using your own optimizer, learning rate, and loss configuration.
+> To avoid this, load the model with compile=False, then manually compile it using your own optimizer, learning rate, and loss configuration.
