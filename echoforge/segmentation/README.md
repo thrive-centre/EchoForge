@@ -21,8 +21,8 @@ Each model is tailored for specific tasks, views, and datasets.
 ## 📝 Tasks Covered 
 | Task | Description |
 |------|-------------|
-| LV Segmentation | Binary segmentation of the left ventricle from 2CH/4CH views |
-| Multi-Class Segmentation| Segmentation of left and right ventricle, Myocardium, etc |
+| LV Segmentation | Binary segmentation of the left ventricle from 4CH views |
+
 
 
 ## 📊 Datasets Used
