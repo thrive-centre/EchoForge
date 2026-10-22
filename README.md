@@ -86,7 +86,7 @@ This is simply where your repo is located inside the container.
 from echoforge import load_model
 
 # Load any model by name from the registry
-model = load_model("EchoView47_classifier", pretrained=True)
+model = load_model("EchoFine_classifier", pretrained=True)
 ```
 ---
 
@@ -94,12 +94,28 @@ model = load_model("EchoView47_classifier", pretrained=True)
 
 | Model | Task | `load_model` name | Docs | Weights (Hugging Face) | Datasets |
 |---|---|---|---|---|---|
-| **EchoView47 Classifier** | 47-class view classification | `EchoView47_classifier` | [README](echoforge/classification/models/EchoView47/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
-| **EchoView47 Contrastive Encoder** | Self-supervised view encoder | `EchoView47_contrastive_encoder` | [README](echoforge/classification/models/EchoView47/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
-| **EchoView47 TMED2** | 5-class TMED2 view classification | `EchoView47_TMED2` | [README](echoforge/classification/models/EchoView47/README.md) | [thrive-2025/test_echoforge](https://huggingface.co/thrive-2025/test_echoforge) | TMED2 |
+| **EchoFine Classifier** | 47-class view classification | `EchoFine_classifier` | [README](echoforge/classification/models/EchoFine/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
+| **EchoFine Contrastive Encoder** | Self-supervised view encoder | `EchoFine_contrastive_encoder` | [README](echoforge/classification/models/EchoFine/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
+| **EchoFine TMED2** | 5-class TMED2 view classification | `EchoFine_TMED2` | [README](echoforge/classification/models/EchoFine/README.md) | [thrive-2025/test_echoforge](https://huggingface.co/thrive-2025/test_echoforge) | TMED2 |
 | **EchoSDNet** | Single vs. dual-view classification | `EchoSDNet` | [README](echoforge/classification/models/EchoSDNet/README.md) | [thrive-2025/EchoSDNet](https://huggingface.co/thrive-2025/EchoSDNet) | UNITY |
 | **EchoLVSNet** | LV segmentation | `EchoLVSNet` | [README](echoforge/segmentation/models/echolvsnet/README.md) | [thrive-2025/echolvsnet](https://huggingface.co/thrive-2025/echolvsnet) | UNITY |
 | **EchoPDNet** | ED/ES phase detection (docs only) | _coming soon_ | [README](echoforge/phasedetection/models/echopdnet/README.md) | – | – |
+
+### 🤗 All Hugging Face Model Links
+Central list: [`echoforge/config/model_links.json`](echoforge/config/model_links.json). Entries marked `PLACEHOLDER` are dummy links to be updated once published.
+
+| Model | Hugging Face |
+|---|---|
+| EchoFine Classifier / Contrastive Encoder | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) |
+| EchoFine TMED2 | [thrive-2025/test_echoforge](https://huggingface.co/thrive-2025/test_echoforge) |
+| EchoSDNet | [thrive-2025/EchoSDNet](https://huggingface.co/thrive-2025/EchoSDNet) |
+| EchoLVSNet | [thrive-2025/echolvsnet](https://huggingface.co/thrive-2025/echolvsnet) |
+| EchoPDNet | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoPDNet) |
+| EchoFine UNITY ResNet50 | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-UNITY) |
+| EchoFine TMED2 ResNet50 | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-TMED2) |
+| A4C_ROT | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT) |
+
+> Note: EchoView47 was renamed **EchoFine**; the published Hugging Face repo keeps the old `EchoView47` name. Old `EchoView47_*` names still work in `load_model`.
 
 ### 📚 Modules
 - [Classification](echoforge/classification/README.md)

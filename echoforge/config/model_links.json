@@ -1,0 +1,14 @@
+{
+  "_note": "PLACEHOLDER entries are dummy links; replace when published.",
+  "models": {
+    "EchoFine_classifier": "https://huggingface.co/thrive-2025/EchoView47",
+    "EchoFine_contrastive_encoder": "https://huggingface.co/thrive-2025/EchoView47",
+    "EchoFine_TMED2": "https://huggingface.co/thrive-2025/test_echoforge",
+    "EchoSDNet": "https://huggingface.co/thrive-2025/EchoSDNet",
+    "EchoLVSNet": "https://huggingface.co/thrive-2025/echolvsnet",
+    "EchoPDNet": "https://huggingface.co/thrive-2025/PLACEHOLDER-EchoPDNet",
+    "EchoFine_UNITY_ResNet50": "https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-UNITY",
+    "EchoFine_TMED2_ResNet50": "https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-TMED2",
+    "A4C_ROT": "https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT"
+  }
+}

@@ -1,15 +1,15 @@
 {
-  "EchoView47_contrastive_encoder": {
+  "EchoFine_contrastive_encoder": {
         "repo_id": "thrive-2025/EchoView47",
         "filename": "TTE_47_Contrastive_Encoder.h5"
 
   },
-  "EchoView47_classifier": {
+  "EchoFine_classifier": {
         "repo_id": "thrive-2025/EchoView47",
         "filename": "TTE47_Classifier_Model.h5"
 
   },
-  "EchoView47_TMED2": {
+  "EchoFine_TMED2": {
         "repo_id": "thrive-2025/test_echoforge",
         "filename": "model_run0_perc.h5"
 
