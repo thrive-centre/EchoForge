@@ -39,6 +39,7 @@ def main():
     ap.add_argument("--org", default=ORG)
     ap.add_argument("--execute", action="store_true", help="actually upload and update the registry")
     ap.add_argument("--private", action="store_true", help="create new repos as private")
+    ap.add_argument("--names", help="optional JSON file {\"relative/path.h5\": \"RepoName\"} to set names yourself")
     ap.add_argument("--only", help="only process files whose name contains this text")
     args = ap.parse_args()
 
@@ -46,14 +47,41 @@ def main():
     if not paths:
         sys.exit("No .h5/.keras files found.")
 
-    rows, seen = [], {}
-    for p in paths:
-        fname = os.path.basename(p)
-        name = repo_name(os.path.splitext(fname)[0])
-        if name in seen:
-            sys.exit(f"Name clash: '{name}' from\n  {seen[name]}\n  {p}\nRename one file and retry.")
-        seen[name] = p
-        rows.append((p, name, fname))
+    overrides = {}
+    if args.names:
+        with open(args.names) as f:
+            overrides = {k.replace("\\", "/"): v for k, v in json.load(f).items()}
+
+    # Name = file name; if several files share it, prefix parent folders until unique.
+    parts = {p: os.path.relpath(p, args.root).replace("\\", "/").split("/") for p in paths}
+    depth = {p: 1 for p in paths}
+
+    def build(p):
+        rel = "/".join(parts[p])
+        if rel in overrides:
+            return repo_name(overrides[rel])
+        segs = parts[p][-depth[p]:]
+        segs = segs[:-1] + [os.path.splitext(segs[-1])[0]]
+        return repo_name("_".join(segs))
+
+    while True:
+        groups = {}
+        for p in paths:
+            groups.setdefault(build(p), []).append(p)
+        clashes = [g for g in groups.values() if len(g) > 1]
+        if not clashes:
+            break
+        grew = False
+        for g in clashes:
+            for p in g:
+                rel = "/".join(parts[p])
+                if rel not in overrides and depth[p] < len(parts[p]):
+                    depth[p] += 1
+                    grew = True
+        if not grew:
+            sys.exit("Could not make names unique: " + ", ".join(g[0] for g in clashes))
+
+    rows = [(p, build(p), os.path.basename(p)) for p in paths]
 
     print(f"{'LOCAL FILE':60} -> REPO / REGISTRY KEY")
     for p, name, fname in rows:
