@@ -1,5 +1,7 @@
 <p align="Right">
+  <a href="https://www.thrive-centre.com">
   <img src="echoforge/images/thrive_logo.jpg" alt="Thrive Intelligent Health" width="160">
+  </a>
 </p>
 
 <h1 align="center">EchoForge</h1>
@@ -12,12 +14,6 @@ The library is built using TensorFlow/Keras and integrates with models hosted on
 
 
 **From View Classification to Segmentation and Timing Detection — All in One Library**
-
-<!-- <p align="center">
-  <img src="echoforge/images/calssifcation_view.mp4" width="32%" alt="View Classification"/>
-  <img src="echoforge/images/segmentaion.gif" width="32%" alt="LV Segmentation"/>
-  <img src="echoforge/images/phase_detection_banner.png" width="32%" alt="Phase Detection"/>
-</p> -->
 
 ### From View Classification to Segmentation and Timing Detection
 
