@@ -51,7 +51,7 @@ Below is the list of phase detection model currently supported in this module:
 
 | **Model**     | **Task**                 | **Architecture**       | **PACS (ED/ES)** | **MultiBeat (ED/ES)** | **EchoNet-Dynamic (ED/ES)** |
 |---------------|--------------------------|-------------------------|------------------|------------------------|-----------------------------|
-| [**EchoPDNet**](echoforge/phasedetection/models/echopdnet/README.md) | ED/ES Frame Regression | ResNet50 + 2x-LSTM     | 0.66 / 0.81        | 2.62 / 1.86            | 2.30 / 3.49                  | 
+| [**EchoPDNet**](../phasedetection/models/echopdnet/README.md) | ED/ES Frame Regression | ResNet50 + 2x-LSTM     | 0.66 / 0.81        | 2.62 / 1.86            | 2.30 / 3.49                  | 
 
 
 ---
