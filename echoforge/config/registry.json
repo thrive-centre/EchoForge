@@ -1,26 +1,38 @@
 {
   "EchoFine_contrastive_encoder": {
-        "repo_id": "thrive-2025/EchoView47",
-        "filename": "TTE_47_Contrastive_Encoder.h5"
-
+    "repo_id": "thrive-2025/EchoView47",
+    "filename": "TTE_47_Contrastive_Encoder.h5"
   },
   "EchoFine_classifier": {
-        "repo_id": "thrive-2025/EchoView47",
-        "filename": "TTE47_Classifier_Model.h5"
-
+    "repo_id": "thrive-2025/EchoView47",
+    "filename": "TTE47_Classifier_Model.h5"
   },
   "EchoFine_TMED2": {
-        "repo_id": "thrive-2025/test_echoforge",
-        "filename": "model_run0_perc.h5"
-
+    "repo_id": "thrive-2025/test_echoforge",
+    "filename": "model_run0_perc.h5"
   },
   "EchoLVSNet": {
-        "repo_id": "thrive-2025/echolvsnet",
+    "repo_id": "thrive-2025/echolvsnet",
     "filename": "best_finetuned_model_1.h5"
   },
   "EchoSDNet": {
-        "repo_id": "thrive-2025/EchoSDNet",
+    "repo_id": "thrive-2025/EchoSDNet",
     "filename": "Single_Dual_Classification.h5"
+  },
+  "EchoPDNet": {
+    "repo_id": "thrive-2025/PLACEHOLDER-EchoPDNet",
+    "filename": "PLACEHOLDER.h5"
+  },
+  "EchoFine_UNITY_ResNet50": {
+    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine-UNITY",
+    "filename": "PLACEHOLDER.h5"
+  },
+  "EchoFine_TMED2_ResNet50": {
+    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine-TMED2",
+    "filename": "PLACEHOLDER.h5"
+  },
+  "A4C_ROT": {
+    "repo_id": "thrive-2025/PLACEHOLDER-A4C-ROT",
+    "filename": "PLACEHOLDER.h5"
   }
 }
-

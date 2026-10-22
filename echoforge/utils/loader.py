@@ -21,6 +21,11 @@ def download_model(model_name):
     repo_id = registry[model_name]["repo_id"]
     token = os.environ.get("HF_TOKEN")
 
+    if "PLACEHOLDER" in repo_id or "PLACEHOLDER" in filename:
+        raise ValueError(
+            f"Model '{model_name}' is not published yet. Update its repo_id/filename in echoforge/config/registry.json."
+        )
+
     # Final file path
     local_path = os.path.join(save_path, filename)
 

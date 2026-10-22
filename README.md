@@ -117,6 +117,15 @@ Central list: [`echoforge/config/model_links.json`](echoforge/config/model_links
 
 > Note: EchoView47 was renamed **EchoFine**; the published Hugging Face repo keeps the old `EchoView47` name. Old `EchoView47_*` names still work in `load_model`.
 
+### 🔁 Use any model by changing its name
+```python
+from echoforge import load_model, list_models
+
+print(list_models())                  # every model in the registry
+model = load_model("EchoLVSNet")      # just swap the name
+```
+To publish a new model, add `{"repo_id": ..., "filename": ...}` under its name in `echoforge/config/registry.json` (replace the `PLACEHOLDER` entries). Registry-only models load via `tf.keras.models.load_model`.
+
 ### 📚 Modules
 - [Classification](echoforge/classification/README.md)
 - [Segmentation](echoforge/segmentation/README.md)
