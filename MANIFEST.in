@@ -1,0 +1,1 @@
+recursive-include echoforge/config *.json

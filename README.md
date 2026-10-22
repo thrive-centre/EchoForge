@@ -1,4 +1,6 @@
-# EchoForge
+<h1 align="center">🫀 EchoForge</h1>
+
+<p align="center"><b>Pretrained deep learning models for echocardiography</b><br>TensorFlow/Keras · Hugging Face · THRIVE Centre</p>
 
 **EchoForge** is a modular deep learning library built for echocardiographic image analysis. It provides seamless access to pretrained models for classification and segmentation, and will expand to include landmark detection, image quality assessment, and more.
 
@@ -88,11 +90,28 @@ model = load_model("EchoView47_classifier", pretrained=True)
 ```
 ---
 
-## 🧾 Current Model Portfolio
-- Classification [*View our classification module*](echoforge/classification/README.md)
-- Segmentation [*View our segmentation module*](echoforge/segmentation/README.md)
-- Phase Detection [*View our phase detection module*](echoforge/phasedetection/README.md)
+## 🧾 Model Zoo
 
+| Model | Task | `load_model` name | Docs | Weights (Hugging Face) | Datasets |
+|---|---|---|---|---|---|
+| **EchoView47 Classifier** | 47-class view classification | `EchoView47_classifier` | [README](echoforge/classification/models/EchoView47/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
+| **EchoView47 Contrastive Encoder** | Self-supervised view encoder | `EchoView47_contrastive_encoder` | [README](echoforge/classification/models/EchoView47/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
+| **EchoView47 TMED2** | 5-class TMED2 view classification | `EchoView47_TMED2` | [README](echoforge/classification/models/EchoView47/README.md) | [thrive-2025/test_echoforge](https://huggingface.co/thrive-2025/test_echoforge) | TMED2 |
+| **EchoSDNet** | Single vs. dual-view classification | `EchoSDNet` | [README](echoforge/classification/models/EchoSDNet/README.md) | [thrive-2025/EchoSDNet](https://huggingface.co/thrive-2025/EchoSDNet) | UNITY |
+| **EchoLVSNet** | LV segmentation | `EchoLVSNet` | [README](echoforge/segmentation/models/echolvsnet/README.md) | [thrive-2025/echolvsnet](https://huggingface.co/thrive-2025/echolvsnet) | UNITY |
+| **EchoPDNet** | ED/ES phase detection (docs only) | _coming soon_ | [README](echoforge/phasedetection/models/echopdnet/README.md) | – | – |
+
+### 📚 Modules
+- [Classification](echoforge/classification/README.md)
+- [Segmentation](echoforge/segmentation/README.md)
+- [Phase Detection](echoforge/phasedetection/README.md)
+
+### 🔗 THRIVE Resources
+- 🏠 [THRIVE Centre](https://www.thrive-centre.com)
+- 🗂️ [Datasets](https://www.thrive-centre.com/datasets) (e.g. [TTE47](https://www.thrive-centre.com/datasets/TTE47), [UnityLV-MultiX](https://www.thrive-centre.com/datasets/UnityLV-MultiX))
+- 🤗 [THRIVE on Hugging Face](https://huggingface.co/thrive-2025)
+
+> Registered models are listed in `echoforge/config/registry.json`. Private repos need the `HF_TOKEN` environment variable.
 
 ---
 

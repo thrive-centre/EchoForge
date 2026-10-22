@@ -10,11 +10,13 @@ def download_model(model_name):
     os.makedirs(save_path, exist_ok=True)
 
     # Load registry.json
-    registry_path = os.path.join(os.path.dirname(__file__), "../config/registry.json")
+    registry_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "registry.json")
     with open(registry_path) as f:
         registry = json.load(f)
 
     # Get model info
+    if model_name not in registry:
+        raise ValueError(f"Model '{model_name}' not found in registry. Available: {sorted(registry)}")
     filename = registry[model_name]["filename"]
     repo_id = registry[model_name]["repo_id"]
     token = os.environ.get("HF_TOKEN")
