@@ -1,10 +1,10 @@
 {
   "EchoFine_contrastive_encoder": {
-    "repo_id": "thrive-2025/EchoView47",
+    "repo_id": "thrive-2025/EchoFine_contrastive_encoder",
     "filename": "TTE_47_Contrastive_Encoder.h5"
   },
   "EchoFine_classifier": {
-    "repo_id": "thrive-2025/EchoView47",
+    "repo_id": "thrive-2025/EchoFine_classifier",
     "filename": "TTE47_Classifier_Model.h5"
   },
   "EchoFine_TMED2": {
@@ -23,84 +23,80 @@
     "repo_id": "thrive-2025/PLACEHOLDER-EchoPDNet",
     "filename": "PLACEHOLDER.h5"
   },
-  "EchoFine_UNITY_ResNet50": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine-UNITY",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "EchoFine_TMED2_ResNet50": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine-TMED2",
-    "filename": "PLACEHOLDER.h5"
-  },
   "A4C_ROT": {
     "repo_id": "thrive-2025/PLACEHOLDER-A4C-ROT",
     "filename": "PLACEHOLDER.h5"
   },
-  "Xception_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-Xception_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
+  "EchoFine_TMED2_fold0": {
+    "repo_id": "thrive-2025/EchoFine_TMED2_fold0",
+    "filename": "model_fold0.h5"
   },
-  "SwinTransformerV2_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-SwinTransformerV2_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
+  "EchoFine_TMED2_fold1": {
+    "repo_id": "thrive-2025/EchoFine_TMED2_fold1",
+    "filename": "model_fold1.h5"
   },
-  "EfficientNetV2_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EfficientNetV2_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "ViT_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-ViT_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "ConvNeXt_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-ConvNeXt_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "DenseNet121_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-DenseNet121_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "ResNet50_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-ResNet50_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "ResNet101_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-ResNet101_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "SwinTransformerV2-T_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-SwinTransformerV2-T_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "ConvNeXt-T_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-ConvNeXt-T_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "ViT-S_TTE47_baseline": {
-    "repo_id": "thrive-2025/PLACEHOLDER-ViT-S_TTE47_baseline",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "EchoFine_classifier_SwinTransformerV2-T": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine_classifier_SwinTransformerV2-T",
-    "filename": "PLACEHOLDER.h5"
-  },
-  "EchoFine_contrastive_encoder_SwinTransformerV2-T": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine_contrastive_encoder_SwinTransformerV2-T",
-    "filename": "PLACEHOLDER.h5"
+  "EchoFine_TMED2_fold2": {
+    "repo_id": "thrive-2025/EchoFine_TMED2_fold2",
+    "filename": "model_fold2.h5"
   },
   "EchoFine_classifier_ConvNeXt-T": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine_classifier_ConvNeXt-T",
-    "filename": "PLACEHOLDER.h5"
+    "repo_id": "thrive-2025/EchoFine_classifier_ConvNeXt-T",
+    "filename": "model_run0_perc84.h5"
   },
   "EchoFine_contrastive_encoder_ConvNeXt-T": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine_contrastive_encoder_ConvNeXt-T",
-    "filename": "PLACEHOLDER.h5"
+    "repo_id": "thrive-2025/EchoFine_contrastive_encoder_ConvNeXt-T",
+    "filename": "best_model.h5"
   },
-  "EchoFine_classifier_ViT-S": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine_classifier_ViT-S",
-    "filename": "PLACEHOLDER.h5"
+  "EchoFine_classifier_EfficientNetV2": {
+    "repo_id": "thrive-2025/EchoFine_classifier_EfficientNetV2",
+    "filename": "model_run0_perc84.h5"
   },
-  "EchoFine_contrastive_encoder_ViT-S": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoFine_contrastive_encoder_ViT-S",
-    "filename": "PLACEHOLDER.h5"
+  "EchoFine_contrastive_encoder_EfficientNetV2": {
+    "repo_id": "thrive-2025/EchoFine_contrastive_encoder_EfficientNetV2",
+    "filename": "best_model.h5"
+  },
+  "EchoFine_classifier_SwinTransV2-T": {
+    "repo_id": "thrive-2025/EchoFine_classifier_SwinTransV2-T",
+    "filename": "model_run0_perc84.h5"
+  },
+  "EchoFine_contrastive_encoder_SwinTransV2-T": {
+    "repo_id": "thrive-2025/EchoFine_contrastive_encoder_SwinTransV2-T",
+    "filename": "best_model.h5"
+  },
+  "ConvNeXt_TTE47_baseline": {
+    "repo_id": "thrive-2025/ConvNeXt_TTE47_baseline",
+    "filename": "convnext_baseline.h5"
+  },
+  "DenseNet121_TTE47_baseline": {
+    "repo_id": "thrive-2025/DenseNet121_TTE47_baseline",
+    "filename": "densenet121_baseline.h5"
+  },
+  "EfficientNetV2_TTE47_baseline": {
+    "repo_id": "thrive-2025/EfficientNetV2_TTE47_baseline",
+    "filename": "efficientnetv2_baseline.h5"
+  },
+  "ResNet101_TTE47_baseline": {
+    "repo_id": "thrive-2025/ResNet101_TTE47_baseline",
+    "filename": "resnet101_baseline.h5"
+  },
+  "ResNet50_TTE47_baseline": {
+    "repo_id": "thrive-2025/ResNet50_TTE47_baseline",
+    "filename": "resnet50_baseline.h5"
+  },
+  "SwinTransformerV2_TTE47_baseline": {
+    "repo_id": "thrive-2025/SwinTransformerV2_TTE47_baseline",
+    "filename": "swintransformerv2_baseline.h5"
+  },
+  "ViT_TTE47_baseline": {
+    "repo_id": "thrive-2025/ViT_TTE47_baseline",
+    "filename": "vit_baseline.h5"
+  },
+  "Xception_TTE47_baseline": {
+    "repo_id": "thrive-2025/Xception_TTE47_baseline",
+    "filename": "xception_baseline.h5"
+  },
+  "EchoLVSNet_full": {
+    "repo_id": "thrive-2025/EchoLVSNet_full",
+    "filename": "best_finetuned_model_1.h5"
   }
 }

@@ -1,14 +1,30 @@
 {
-  "_note": "PLACEHOLDER entries are dummy links; replace when published.",
+  "_note": "Reference only; the loader reads registry.json. PLACEHOLDER entries are not published yet.",
   "models": {
-    "EchoFine_classifier": "https://huggingface.co/thrive-2025/EchoView47",
-    "EchoFine_contrastive_encoder": "https://huggingface.co/thrive-2025/EchoView47",
+    "EchoFine_contrastive_encoder": "https://huggingface.co/thrive-2025/EchoFine_contrastive_encoder",
+    "EchoFine_classifier": "https://huggingface.co/thrive-2025/EchoFine_classifier",
     "EchoFine_TMED2": "https://huggingface.co/thrive-2025/test_echoforge",
-    "EchoSDNet": "https://huggingface.co/thrive-2025/EchoSDNet",
     "EchoLVSNet": "https://huggingface.co/thrive-2025/echolvsnet",
+    "EchoSDNet": "https://huggingface.co/thrive-2025/EchoSDNet",
     "EchoPDNet": "https://huggingface.co/thrive-2025/PLACEHOLDER-EchoPDNet",
-    "EchoFine_UNITY_ResNet50": "https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-UNITY",
-    "EchoFine_TMED2_ResNet50": "https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-TMED2",
-    "A4C_ROT": "https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT"
+    "A4C_ROT": "https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT",
+    "EchoFine_TMED2_fold0": "https://huggingface.co/thrive-2025/EchoFine_TMED2_fold0",
+    "EchoFine_TMED2_fold1": "https://huggingface.co/thrive-2025/EchoFine_TMED2_fold1",
+    "EchoFine_TMED2_fold2": "https://huggingface.co/thrive-2025/EchoFine_TMED2_fold2",
+    "EchoFine_classifier_ConvNeXt-T": "https://huggingface.co/thrive-2025/EchoFine_classifier_ConvNeXt-T",
+    "EchoFine_contrastive_encoder_ConvNeXt-T": "https://huggingface.co/thrive-2025/EchoFine_contrastive_encoder_ConvNeXt-T",
+    "EchoFine_classifier_EfficientNetV2": "https://huggingface.co/thrive-2025/EchoFine_classifier_EfficientNetV2",
+    "EchoFine_contrastive_encoder_EfficientNetV2": "https://huggingface.co/thrive-2025/EchoFine_contrastive_encoder_EfficientNetV2",
+    "EchoFine_classifier_SwinTransV2-T": "https://huggingface.co/thrive-2025/EchoFine_classifier_SwinTransV2-T",
+    "EchoFine_contrastive_encoder_SwinTransV2-T": "https://huggingface.co/thrive-2025/EchoFine_contrastive_encoder_SwinTransV2-T",
+    "ConvNeXt_TTE47_baseline": "https://huggingface.co/thrive-2025/ConvNeXt_TTE47_baseline",
+    "DenseNet121_TTE47_baseline": "https://huggingface.co/thrive-2025/DenseNet121_TTE47_baseline",
+    "EfficientNetV2_TTE47_baseline": "https://huggingface.co/thrive-2025/EfficientNetV2_TTE47_baseline",
+    "ResNet101_TTE47_baseline": "https://huggingface.co/thrive-2025/ResNet101_TTE47_baseline",
+    "ResNet50_TTE47_baseline": "https://huggingface.co/thrive-2025/ResNet50_TTE47_baseline",
+    "SwinTransformerV2_TTE47_baseline": "https://huggingface.co/thrive-2025/SwinTransformerV2_TTE47_baseline",
+    "ViT_TTE47_baseline": "https://huggingface.co/thrive-2025/ViT_TTE47_baseline",
+    "Xception_TTE47_baseline": "https://huggingface.co/thrive-2025/Xception_TTE47_baseline",
+    "EchoLVSNet_full": "https://huggingface.co/thrive-2025/EchoLVSNet_full"
   }
 }
