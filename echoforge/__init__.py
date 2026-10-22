@@ -7,13 +7,16 @@ from .classification.models.EchoSDNet.EchoSDNet import build_EchoSDNet
 
 def list_models():
     """Return the names of all models in the registry."""
-    import json, os
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", "registry.json")
-    with open(path) as f:
-        return sorted(json.load(f))
+    from .utils.loader import load_registry
+    return sorted(load_registry())
 
 
 def load_model(name, pretrained=True):
+    """Load a complete model (architecture + weights) by registry name.
+
+    Built-in models keep their dedicated builders; every other registry entry is
+    loaded as a full Keras model straight from its Hugging Face location.
+    """
     builders = {
         "echofine_contrastive_encoder": build_echofine_contrastive_encoder,
         "echofine_classifier": build_echofine_classifier,
@@ -21,19 +24,10 @@ def load_model(name, pretrained=True):
         "echosdnet": build_EchoSDNet,
         "echolvsnet": build_echolvsnet,
     }
-    aliases = {k.replace("echofine", "echoview47"): v for k, v in builders.items() if k.startswith("echofine")}
-    key = name.lower()
-    builder = builders.get(key) or aliases.get(key)
+    key = name.lower().replace("echoview47", "echofine")
+    builder = builders.get(key)
     if builder is not None:
         return builder(pretrained=pretrained)
 
-    # Generic path: any other model listed in the registry loads straight from Hugging Face
-    registry = {m.lower(): m for m in list_models()}
-    if key in registry:
-        if not pretrained:
-            raise ValueError(f"Model '{name}' has no architecture builder; use pretrained=True.")
-        import tensorflow as tf
-        from .utils.loader import download_model
-        return tf.keras.models.load_model(download_model(registry[key]), compile=False)
-
-    raise ValueError(f"Model '{name}' not found. Available: {list_models()}")
+    from .utils.loader import load_full_model
+    return load_full_model(name, pretrained=pretrained)

@@ -126,6 +126,17 @@ model = load_model("EchoLVSNet")      # just swap the name
 ```
 To publish a new model, add `{"repo_id": ..., "filename": ...}` under its name in `echoforge/config/registry.json` (replace the `PLACEHOLDER` entries). Registry-only models load via `tf.keras.models.load_model`.
 
+### 🧪 Baseline & backbone variants (full models)
+Each loads the complete model (architecture + weights) from Hugging Face:
+```python
+from echoforge import load_model
+model = load_model("Xception_TTE47_baseline")          # also: SwinTransformerV2, EfficientNetV2, ViT, ConvNeXt,
+                                                       # DenseNet121, ResNet50, ResNet101, SwinTransformerV2-T, ConvNeXt-T, ViT-S
+clf = load_model("EchoFine_classifier_ConvNeXt-T")     # also SwinTransformerV2-T, ViT-S
+enc = load_model("EchoFine_contrastive_encoder_ViT-S")
+```
+Registry entries support `repo_id` + `filename` (single `.h5`/`.keras`), or `repo_id` with `filename: null` (whole repo / SavedModel folder), plus an optional `subfolder`. Names ignore case and `-` vs `_`.
+
 ### 📚 Modules
 - [Classification](echoforge/classification/README.md)
 - [Segmentation](echoforge/segmentation/README.md)
