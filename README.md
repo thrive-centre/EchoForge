@@ -9,15 +9,12 @@ The library is built using TensorFlow/Keras and integrates with models hosted on
 
 **From View Classification to Segmentation and Timing Detection — All in One Library**
 
-#### View Classification  
-![Echocardiographic View Classification](echoforge/images/classificaiton.png)
-
-#### LV Segmentation  
-![Chamber Segmentation in Echo Images](echoforge/images/segmentaion.gif)
-
-#### Phase Detection (ED vs ES Labelling)  
-![Phase Detection](echoforge/images/pacs-examples.png)
-
+<p align="center">
+  <img src="echoforge/images/classification_banner.png" width="32%" alt="View Classification"/>
+  <img src="echoforge/images/segmentation_banner.png" width="32%" alt="LV Segmentation"/>
+  <img src="echoforge/images/phase_detection_banner.png" width="32%" alt="Phase Detection"/>
+</p>
+<p align="center"><sub>Illustrative graphics (not real patient data).</sub></p>
 
 ---
 
@@ -92,49 +89,20 @@ model = load_model("EchoFine_classifier", pretrained=True)
 
 ## 🧾 Model Zoo
 
-| Model | Task | `load_model` name | Docs | Weights (Hugging Face) | Datasets |
-|---|---|---|---|---|---|
-| **EchoFine Classifier** | 47-class view classification | `EchoFine_classifier` | [README](echoforge/classification/models/EchoFine/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
-| **EchoFine Contrastive Encoder** | Self-supervised view encoder | `EchoFine_contrastive_encoder` | [README](echoforge/classification/models/EchoFine/README.md) | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) | [TTE47](https://www.thrive-centre.com/datasets/TTE47) |
-| **EchoFine TMED2** | 5-class TMED2 view classification | `EchoFine_TMED2` | [README](echoforge/classification/models/EchoFine/README.md) | [thrive-2025/test_echoforge](https://huggingface.co/thrive-2025/test_echoforge) | TMED2 |
-| **EchoSDNet** | Single vs. dual-view classification | `EchoSDNet` | [README](echoforge/classification/models/EchoSDNet/README.md) | [thrive-2025/EchoSDNet](https://huggingface.co/thrive-2025/EchoSDNet) | UNITY |
-| **EchoLVSNet** | LV segmentation | `EchoLVSNet` | [README](echoforge/segmentation/models/echolvsnet/README.md) | [thrive-2025/echolvsnet](https://huggingface.co/thrive-2025/echolvsnet) | UNITY |
-| **EchoPDNet** | ED/ES phase detection (docs only) | _coming soon_ | [README](echoforge/phasedetection/models/echopdnet/README.md) | – | – |
+| Task | Model | Docs |
+|---|---|---|
+| View classification | EchoFine (classifier, contrastive encoder, TMED2), EchoSDNet | [Classification](echoforge/classification/README.md) · [EchoFine](echoforge/classification/models/EchoFine/README.md) · [EchoSDNet](echoforge/classification/models/EchoSDNet/README.md) |
+| LV segmentation | EchoLVSNet | [Segmentation](echoforge/segmentation/README.md) · [EchoLVSNet](echoforge/segmentation/models/echolvsnet/README.md) |
+| Phase detection (ED/ES) | EchoPDNet | [Phase Detection](echoforge/phasedetection/README.md) · [EchoPDNet](echoforge/phasedetection/models/echopdnet/README.md) |
 
-### 🤗 All Hugging Face Model Links
-Central list: [`echoforge/config/model_links.json`](echoforge/config/model_links.json). Entries marked `PLACEHOLDER` are dummy links to be updated once published.
+Weights, datasets and model details are available through [THRIVE](https://www.thrive-centre.com), including the [datasets page](https://www.thrive-centre.com/datasets) (e.g. [TTE47](https://www.thrive-centre.com/datasets/TTE47)). Registered model names are in `echoforge/config/registry.json`, or call `list_models()`.
 
-| Model | Hugging Face |
-|---|---|
-| EchoFine Classifier / Contrastive Encoder | [thrive-2025/EchoView47](https://huggingface.co/thrive-2025/EchoView47) |
-| EchoFine TMED2 | [thrive-2025/test_echoforge](https://huggingface.co/thrive-2025/test_echoforge) |
-| EchoSDNet | [thrive-2025/EchoSDNet](https://huggingface.co/thrive-2025/EchoSDNet) |
-| EchoLVSNet | [thrive-2025/echolvsnet](https://huggingface.co/thrive-2025/echolvsnet) |
-| EchoPDNet | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoPDNet) |
-| EchoFine UNITY ResNet50 | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-UNITY) |
-| EchoFine TMED2 ResNet50 | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-TMED2) |
-| A4C_ROT | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT) |
-
-
-### 🔁 Use any model by changing its name
 ```python
 from echoforge import load_model, list_models
 
-print(list_models())                  # every model in the registry
-model = load_model("EchoLVSNet")      # just swap the name
+print(list_models())
+model = load_model("EchoLVSNet")   # swap the name to load any model
 ```
-To publish a new model, add `{"repo_id": ..., "filename": ...}` under its name in `echoforge/config/registry.json` (replace the `PLACEHOLDER` entries). Registry-only models load via `tf.keras.models.load_model`.
-
-### 🧪 Baseline & backbone variants (full models)
-Each loads the complete model (architecture + weights) from Hugging Face:
-```python
-from echoforge import load_model
-model = load_model("Xception_TTE47_baseline")          # also: SwinTransformerV2, EfficientNetV2, ViT, ConvNeXt,
-                                                       # DenseNet121, ResNet50, ResNet101, SwinTransformerV2-T, ConvNeXt-T, ViT-S
-clf = load_model("EchoFine_classifier_ConvNeXt-T")     # also SwinTransformerV2-T, ViT-S
-enc = load_model("EchoFine_contrastive_encoder_ViT-S")
-```
-Registry entries support `repo_id` + `filename` (single `.h5`/`.keras`), or `repo_id` with `filename: null` (whole repo / SavedModel folder), plus an optional `subfolder`. Names ignore case and `-` vs `_`.
 
 ### 📚 Modules
 - [Classification](echoforge/classification/README.md)
