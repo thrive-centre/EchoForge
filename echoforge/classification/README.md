@@ -50,11 +50,33 @@ Below is the list of classification models included in this module:
 
 | Model Name     | Task                   | Architecture             | Dataset | Accuracy | F1-Score | Link                                                  |
 |----------------|------------------------|--------------------------|---------|----------|----------|-------------------------------------------------------|
-| **EchoView47** | 2D View Classification | ResNet50                 | UNITY   | 94.1%    | 0.92     | [View Model ➜](models/EchoView47/README.md)       |
-|                |                        |                          | T-MED   | 98.03%   | –        | [View Model ➜](models/EchoView47/README.md)       |
+| **EchoFine** | 2D View Classification | ResNet50                 | UNITY   | 94.1%    | 0.92     | [View Model ➜](models/EchoFine/README.md)       |
+|                |                        |                          | T-MED   | 98.03%   | –        | [View Model ➜](models/EchoFine/README.md)       |
 | **EchoSDNet**  | Binary Classification  | ResNet50 + Custom Layers | UNITY   | 99.48%   | 0.99     | [View Model ➜](models/EchoSDNet/README.md)        |
 
 
+
+### 🤗 Load any model by name
+
+```python
+from echoforge import load_model
+model = load_model("EchoFine_classifier")
+```
+
+**EchoFine (UNITY, 47 views)**
+
+| `load_model` name | Description |
+|---|---|
+| `EchoFine_classifier` | 47-class view classifier |
+| `EchoFine_contrastive_encoder` | Contrastive pretrained encoder |
+| `EchoFine_TMED2` | Fine-tuned on TMED2 (same as `EchoFine_TMED2_fold0`) |
+| `EchoFine_TMED2_fold0` / `_fold1` / `_fold2` | TMED2 cross-validation folds |
+
+**Additional classifiers** (`EchoFine_classifier_<backbone>`) and **contrastive encoders** (`EchoFine_contrastive_encoder_<backbone>`), backbones: `ConvNeXt-T`, `EfficientNetV2`, `SwinTransV2-T` (e.g. `EchoFine_classifier_SwinTransV2-T`). Full tables: [EchoFine README](models/EchoFine/README.md#which-model-do-i-load).
+
+**Baselines without contrastive pretraining** (`<backbone>_TTE47_baseline`): `Xception`, `ResNet50`, `ResNet101`, `DenseNet121`, `EfficientNetV2`, `ConvNeXt`, `ViT`, `SwinTransformerV2`.
+
+Run `from echoforge import list_models; print(list_models())` for the full list.
 
 ---
 

@@ -1,0 +1,22 @@
+{
+  "Baseline Models Without Contrastive Pretraining/ConvNeXt/convnext_baseline.h5": "ConvNeXt_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/DenseNet121/densenet121_baseline.h5": "DenseNet121_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/EfficientNetV2/efficientnetv2_baseline.h5": "EfficientNetV2_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/ResNet101/resnet101_baseline.h5": "ResNet101_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/ResNet50/resnet50_baseline.h5": "ResNet50_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/SwinTransformerV2/swintransformerv2_baseline.h5": "SwinTransformerV2_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/ViT/vit_baseline.h5": "ViT_TTE47_baseline",
+  "Baseline Models Without Contrastive Pretraining/Xception/xception_baseline.h5": "Xception_TTE47_baseline",
+  "Additional Classifiers/ConvNeXt-T/model_run0_perc84.h5": "EchoFine_classifier_ConvNeXt-T",
+  "Additional Contrastive Encoders/ConvNeXt-T/best_model.h5": "EchoFine_contrastive_encoder_ConvNeXt-T",
+  "Additional Classifiers/EfficientNetV2/model_run0_perc84.h5": "EchoFine_classifier_EfficientNetV2",
+  "Additional Contrastive Encoders/EfficientNetV2/best_model.h5": "EchoFine_contrastive_encoder_EfficientNetV2",
+  "Additional Classifiers/SwinTransV2-T/model_run0_perc84.h5": "EchoFine_classifier_SwinTransV2-T",
+  "Additional Contrastive Encoders/SwinTransV2-T/best_model.h5": "EchoFine_contrastive_encoder_SwinTransV2-T",
+  "EchoView47 Classifier/TTE47_Classifier_Model.h5": "EchoFine_classifier",
+  "EchoView47 Contrastive Encoder/TTE_47_Contrastive_Encoder.h5": "EchoFine_contrastive_encoder",
+  "EchoView47 TMED2 Classifier (EchoView47 fine-tuned on TMED2)/model_fold0.h5": "EchoFine_TMED2_fold0",
+  "EchoView47 TMED2 Classifier (EchoView47 fine-tuned on TMED2)/model_fold1.h5": "EchoFine_TMED2_fold1",
+  "EchoView47 TMED2 Classifier (EchoView47 fine-tuned on TMED2)/model_fold2.h5": "EchoFine_TMED2_fold2",
+  "unet segmentation - left ventricle segmentation/best_finetuned_model_1.h5": "EchoLVSNet_full"
+}

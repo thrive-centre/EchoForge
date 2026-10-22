@@ -1,4 +1,6 @@
-# EchoForge
+<h1 align="center">🫀 EchoForge</h1>
+
+<p align="center"><b>Pretrained deep learning models for echocardiography</b><br>TensorFlow/Keras · Hugging Face · THRIVE Centre</p>
 
 **EchoForge** is a modular deep learning library built for echocardiographic image analysis. It provides seamless access to pretrained models for classification and segmentation, and will expand to include landmark detection, image quality assessment, and more.
 
@@ -7,15 +9,12 @@ The library is built using TensorFlow/Keras and integrates with models hosted on
 
 **From View Classification to Segmentation and Timing Detection — All in One Library**
 
-#### View Classification  
-![Echocardiographic View Classification](echoforge/images/classificaiton.png)
-
-#### LV Segmentation  
-![Chamber Segmentation in Echo Images](echoforge/images/segmentaion.gif)
-
-#### Phase Detection (ED vs ES Labelling)  
-![Phase Detection](echoforge/images/pacs-examples.png)
-
+<p align="center">
+  <img src="echoforge/images/classification_banner.png" width="32%" alt="View Classification"/>
+  <img src="echoforge/images/segmentation_banner.png" width="32%" alt="LV Segmentation"/>
+  <img src="echoforge/images/phase_detection_banner.png" width="32%" alt="Phase Detection"/>
+</p>
+<p align="center"><sub>Illustrative graphics (not real patient data).</sub></p>
 
 ---
 
@@ -84,15 +83,39 @@ This is simply where your repo is located inside the container.
 from echoforge import load_model
 
 # Load any model by name from the registry
-model = load_model("EchoView47_classifier", pretrained=True)
+model = load_model("EchoFine_classifier", pretrained=True)
 ```
 ---
 
-## 🧾 Current Model Portfolio
-- Classification [*View our classification module*](echoforge/classification/README.md)
-- Segmentation [*View our segmentation module*](echoforge/segmentation/README.md)
-- Phase Detection [*View our phase detection module*](echoforge/phasedetection/README.md)
+## 🧾 Model Zoo
 
+| Task | Model | Docs |
+|---|---|---|
+| View classification | EchoFine (classifier, contrastive encoder, TMED2), EchoSDNet | [Classification](echoforge/classification/README.md) · [EchoFine](echoforge/classification/models/EchoFine/README.md) · [EchoSDNet](echoforge/classification/models/EchoSDNet/README.md) |
+| LV segmentation | EchoLVSNet | [Segmentation](echoforge/segmentation/README.md) · [EchoLVSNet](echoforge/segmentation/models/echolvsnet/README.md) |
+| Phase detection (ED/ES) | EchoPDNet | [Phase Detection](echoforge/phasedetection/README.md) · [EchoPDNet](echoforge/phasedetection/models/echopdnet/README.md) |
+
+Weights, datasets and model details are available through [THRIVE](https://www.thrive-centre.com), including the [datasets page](https://www.thrive-centre.com/datasets) (e.g. [TTE47](https://www.thrive-centre.com/datasets/TTE47)). Registered model names are in `echoforge/config/registry.json`, or call `list_models()`.
+
+```python
+from echoforge import load_model, list_models
+
+print(list_models())
+model = load_model("EchoLVSNet")   # swap the name to load any model
+# e.g. "EchoFine_classifier_ConvNeXt-T", "ViT_TTE47_baseline", "EchoFine_TMED2_fold0"
+```
+
+### 📚 Modules
+- [Classification](echoforge/classification/README.md)
+- [Segmentation](echoforge/segmentation/README.md)
+- [Phase Detection](echoforge/phasedetection/README.md)
+
+### 🔗 THRIVE Resources
+- 🏠 [THRIVE Centre](https://www.thrive-centre.com)
+- 🗂️ [Datasets](https://www.thrive-centre.com/datasets) (e.g. [TTE47](https://www.thrive-centre.com/datasets/TTE47), [UnityLV-MultiX](https://www.thrive-centre.com/datasets/UnityLV-MultiX))
+- 🤗 [THRIVE on Hugging Face](https://huggingface.co/thrive-2025)
+
+> Registered models are listed in `echoforge/config/registry.json`. Private repos need the `HF_TOKEN` environment variable.
 
 ---
 
