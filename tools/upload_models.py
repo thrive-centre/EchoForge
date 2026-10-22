@@ -52,9 +52,9 @@ def main():
         with open(args.names) as f:
             overrides = {k.replace("\\", "/"): v for k, v in json.load(f).items()}
 
-    # Name = file name; if several files share it, prefix parent folders until unique.
+    # Name = every folder on the way + file name, so the repo name says what the model is.
     parts = {p: os.path.relpath(p, args.root).replace("\\", "/").split("/") for p in paths}
-    depth = {p: 1 for p in paths}
+    depth = {p: len(parts[p]) for p in paths}
 
     def build(p):
         rel = "/".join(parts[p])
@@ -81,7 +81,7 @@ def main():
         if not grew:
             sys.exit("Could not make names unique: " + ", ".join(g[0] for g in clashes))
 
-    rows = [(p, build(p), os.path.basename(p)) for p in paths]
+    rows = [(p, build(p)[:96], os.path.basename(p)) for p in paths]
 
     print(f"{'LOCAL FILE':60} -> REPO / REGISTRY KEY")
     for p, name, fname in rows:
