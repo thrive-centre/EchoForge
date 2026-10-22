@@ -20,8 +20,8 @@
     "filename": "Single_Dual_Classification.h5"
   },
   "EchoPDNet": {
-    "repo_id": "thrive-2025/PLACEHOLDER-EchoPDNet",
-    "filename": "PLACEHOLDER.h5"
+    "repo_id": "thrive-2025/EchoPDNet",
+    "filename": "echoWeights.hdf5"
   },
   "A4C_ROT": {
     "repo_id": "thrive-2025/PLACEHOLDER-A4C-ROT",
