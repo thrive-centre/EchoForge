@@ -40,10 +40,12 @@ def main():
     ap.add_argument("--execute", action="store_true", help="actually upload and update the registry")
     ap.add_argument("--private", action="store_true", help="create new repos as private")
     ap.add_argument("--names", help="optional JSON file {\"relative/path.h5\": \"RepoName\"} to set names yourself")
+    ap.add_argument("--skip", action="append", default=[], help="skip files whose path contains this text (repeatable)")
     ap.add_argument("--only", help="only process files whose name contains this text")
     args = ap.parse_args()
 
-    paths = [p for p in find_models(args.root) if not args.only or args.only.lower() in os.path.basename(p).lower()]
+    paths = [p for p in find_models(args.root) if (not args.only or args.only.lower() in os.path.relpath(p, args.root).lower())
+             and not any(x.lower() in os.path.relpath(p, args.root).lower() for x in args.skip)]
     if not paths:
         sys.exit("No .h5/.keras files found.")
 
