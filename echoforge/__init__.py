@@ -24,7 +24,7 @@ def load_model(name, pretrained=True):
         "echosdnet": build_EchoSDNet,
         "echolvsnet": build_echolvsnet,
     }
-    key = name.lower().replace("echoview47", "echofine")
+    key = name.lower()
     builder = builders.get(key)
     if builder is not None:
         return builder(pretrained=pretrained)

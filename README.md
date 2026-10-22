@@ -115,7 +115,6 @@ Central list: [`echoforge/config/model_links.json`](echoforge/config/model_links
 | EchoFine TMED2 ResNet50 | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-EchoFine-TMED2) |
 | A4C_ROT | [PLACEHOLDER](https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT) |
 
-> Note: EchoView47 was renamed **EchoFine**; the published Hugging Face repo keeps the old `EchoView47` name. Old `EchoView47_*` names still work in `load_model`.
 
 ### 🔁 Use any model by changing its name
 ```python

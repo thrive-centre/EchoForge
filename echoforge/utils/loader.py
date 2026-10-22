@@ -28,11 +28,6 @@ def resolve_name(model_name, registry=None):
     for key in registry:
         if _normalize(key) == wanted:
             return key
-    # backwards compatibility with the old EchoView47 naming
-    legacy = wanted.replace("echoview47", "echofine")
-    for key in registry:
-        if _normalize(key) == legacy:
-            return key
     raise ValueError(
         f"Model '{model_name}' not found in registry. Available: {sorted(registry)}"
     )
