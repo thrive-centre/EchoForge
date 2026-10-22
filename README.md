@@ -102,6 +102,7 @@ from echoforge import load_model, list_models
 
 print(list_models())
 model = load_model("EchoLVSNet")   # swap the name to load any model
+# e.g. "EchoFine_classifier_ConvNeXt-T", "ViT_TTE47_baseline", "EchoFine_TMED2_fold0"
 ```
 
 ### 📚 Modules
