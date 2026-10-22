@@ -143,76 +143,53 @@ You can find more details about the dataset (including the gallery of classes, d
 
 ---
 
-## Import EchoFine Contrastive Encoder 
+## Which model do I load?
+
+Use the exact name in the first column with `load_model`. Weights are downloaded from the Hugging Face repo `thrive-2025/<name>` (shown in the table) the first time and then cached.
 
 ```python
-from echoforge import load_model
+from echoforge import load_model, list_models
 
-# Load any model by name from the registry
-model = load_model("EchoFine_contrastive_encoder", pretrained=True)
-
-# Other available models include:
-# -SwinTransformerV2-T
-# -ConvNeXt-T
-# -ViT-S
+model = load_model("EchoFine_classifier")   # exact name from the table below
+print(list_models())                        # every available name
 ```
 
----
+### EchoFine (TTE47, 47 views)
 
----
+| `load_model("...")` | Model | Hugging Face repo |
+|---|---|---|
+| `EchoFine_classifier` | 47-class view classifier | `thrive-2025/EchoFine_classifier` |
+| `EchoFine_contrastive_encoder` | Contrastive pretrained encoder | `thrive-2025/EchoFine_contrastive_encoder` |
 
-## Import EchoFine Classifier 
+### EchoFine fine-tuned on TMED2 (5 classes)
 
-```python
-from echoforge import load_model
+| `load_model("...")` | Model | Hugging Face repo |
+|---|---|---|
+| `EchoFine_TMED2` | Default TMED2 model (same as fold 0) | `thrive-2025/EchoFine_TMED2_fold0` |
+| `EchoFine_TMED2_fold0` | Cross-validation fold 0 | `thrive-2025/EchoFine_TMED2_fold0` |
+| `EchoFine_TMED2_fold1` | Cross-validation fold 1 | `thrive-2025/EchoFine_TMED2_fold1` |
+| `EchoFine_TMED2_fold2` | Cross-validation fold 2 | `thrive-2025/EchoFine_TMED2_fold2` |
 
-# Load any model by name from the registry
-model = load_model("EchoFine_classifier", pretrained=True)
+### Additional backbones (classifiers and contrastive encoders)
 
-# Other available models include:
-# -SwinTransformerV2-T
-# -ConvNeXt-T
-# -ViT-S
-```
+| Backbone | Classifier | Contrastive encoder |
+|---|---|---|
+| ConvNeXt-T | `EchoFine_classifier_ConvNeXt-T` | `EchoFine_contrastive_encoder_ConvNeXt-T` |
+| EfficientNetV2 | `EchoFine_classifier_EfficientNetV2` | `EchoFine_contrastive_encoder_EfficientNetV2` |
+| SwinTransV2-T | `EchoFine_classifier_SwinTransV2-T` | `EchoFine_contrastive_encoder_SwinTransV2-T` |
 
----
+### Baselines trained on TTE47 (without contrastive pretraining)
 
----
-
-## Import EchoFine TMED2 Classifier 
-
-```python
-from echoforge import load_model
-
-# Load any model by name from the registry
-model = load_model("EchoFine_TMED2", pretrained=True)
-```
-
----
-
----
-
-## Import baseline classifiers trained on TTE47 (without contrastive pretraining) 
-
-```python
-from echoforge import load_model
-
-
-# Example: Load Xception baseline model
-model = load_model("Xception_TTE47_baseline", pretrained=True)
-
-# Other available models include:
-# - SwinTransformerV2_TTE47_baseline
-# - EfficientNetV2_TTE47_baseline
-# - ViT_TTE47_baseline
-# - ConvNeXt_TTE47_baseline
-# - DenseNet121_TTE47_baseline
-# - ResNet50_TTE47_baseline
-# - ResNet101_TTE47_baseline
-# -SwinTransformerV2-T_TTE47_baseline
-# -ConvNeXt-T_TTE47_baseline
-# -ViT-S_TTE47_baseline
-```
+| Backbone | `load_model("...")` |
+|---|---|
+| Xception | `Xception_TTE47_baseline` |
+| ResNet50 | `ResNet50_TTE47_baseline` |
+| ResNet101 | `ResNet101_TTE47_baseline` |
+| DenseNet121 | `DenseNet121_TTE47_baseline` |
+| EfficientNetV2 | `EfficientNetV2_TTE47_baseline` |
+| ConvNeXt | `ConvNeXt_TTE47_baseline` |
+| ViT | `ViT_TTE47_baseline` |
+| SwinTransformerV2 | `SwinTransformerV2_TTE47_baseline` |
 
 ---
 

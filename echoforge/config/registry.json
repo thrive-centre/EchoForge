@@ -8,8 +8,8 @@
     "filename": "TTE47_Classifier_Model.h5"
   },
   "EchoFine_TMED2": {
-    "repo_id": "thrive-2025/test_echoforge",
-    "filename": "model_run0_perc.h5"
+    "repo_id": "thrive-2025/EchoFine_TMED2_fold0",
+    "filename": "model_fold0.h5"
   },
   "EchoLVSNet": {
     "repo_id": "thrive-2025/echolvsnet",

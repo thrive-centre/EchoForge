@@ -160,6 +160,8 @@ tf.keras.layers.Conv2D(1, (1, 1), activation='sigmoid', name='output')(d5)
 from echoforge import load_model
 model = load_model("EchoLVSNet", pretrained=True)
 ```
+
+> Loads `thrive-2025/echolvsnet` (`best_finetuned_model_1.h5`). The same file is also available as `EchoLVSNet_full`.
 ---
 
 ### 🔍 Model Summary

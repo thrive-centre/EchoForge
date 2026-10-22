@@ -69,10 +69,10 @@ model = load_model("EchoFine_classifier")
 |---|---|
 | `EchoFine_classifier` | 47-class view classifier |
 | `EchoFine_contrastive_encoder` | Contrastive pretrained encoder |
-| `EchoFine_TMED2` | Fine-tuned on TMED2 |
+| `EchoFine_TMED2` | Fine-tuned on TMED2 (same as `EchoFine_TMED2_fold0`) |
 | `EchoFine_TMED2_fold0` / `_fold1` / `_fold2` | TMED2 cross-validation folds |
 
-**Additional classifiers** (`EchoFine_classifier_<backbone>`) and **contrastive encoders** (`EchoFine_contrastive_encoder_<backbone>`), backbones: `ConvNeXt-T`, `EfficientNetV2`, `SwinTransV2-T`.
+**Additional classifiers** (`EchoFine_classifier_<backbone>`) and **contrastive encoders** (`EchoFine_contrastive_encoder_<backbone>`), backbones: `ConvNeXt-T`, `EfficientNetV2`, `SwinTransV2-T` (e.g. `EchoFine_classifier_SwinTransV2-T`). Full tables: [EchoFine README](models/EchoFine/README.md#which-model-do-i-load).
 
 **Baselines without contrastive pretraining** (`<backbone>_TTE47_baseline`): `Xception`, `ResNet50`, `ResNet101`, `DenseNet121`, `EfficientNetV2`, `ConvNeXt`, `ViT`, `SwinTransformerV2`.
 

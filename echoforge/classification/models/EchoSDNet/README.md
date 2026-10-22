@@ -127,6 +127,8 @@ from echoforge import load_model
 model = load_model("EchoSDNet", pretrained=True)
 ```
 
+> Loads `thrive-2025/EchoSDNet` (`Single_Dual_Classification.h5`).
+
 ---
 
 ## Notes
