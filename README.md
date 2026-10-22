@@ -10,8 +10,8 @@ The library is built using TensorFlow/Keras and integrates with models hosted on
 **From View Classification to Segmentation and Timing Detection — All in One Library**
 
 <p align="center">
-  <img src="echoforge/images/classification_banner.png" width="32%" alt="View Classification"/>
-  <img src="echoforge/images/segmentation_banner.png" width="32%" alt="LV Segmentation"/>
+  <img src="echoforge/images/classificaiton.png" width="32%" alt="View Classification"/>
+  <img src="echoforge/images/segmentaion.gif" width="32%" alt="LV Segmentation"/>
   <img src="echoforge/images/phase_detection_banner.png" width="32%" alt="Phase Detection"/>
 </p>
 <p align="center"><sub>Illustrative graphics (not real patient data).</sub></p>
@@ -131,4 +131,3 @@ model = load_model("EchoLVSNet")   # swap the name to load any model
 
 - All models are downloaded once and cached in `~/.echoforge/models/`
 - You can load models without pretrained weights for retraining
-- Future versions will include `torch` support and ONNX export
