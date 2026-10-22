@@ -1,7 +1,15 @@
-<h1 align="center">🫀 EchoForge</h1>
-
-<p align="center"><b>Pretrained deep learning models for echocardiography</b><br>TensorFlow/Keras · Hugging Face · THRIVE Centre</p>
-
+<table width="100%">
+  <tr>
+    <td width="20%" align="left">
+      <img src="echoforge/images/thrive_logo.jpg" alt="Thrive Intelligent Health" width="140">
+    </td>
+    <td width="60%" align="center">
+      <h1>EchoForge</h1>
+      <b>Pretrained deep learning models for echocardiography</b>
+    </td>
+    <td width="20%"></td>
+  </tr>
+</table>
 **EchoForge** is a modular deep learning library built for echocardiographic image analysis. It provides seamless access to pretrained models for classification and segmentation, and will expand to include landmark detection, image quality assessment, and more.
 
 The library is built using TensorFlow/Keras and integrates with models hosted on Hugging Face. It is designed for researchers, clinicians, and ML developers working with cardiac ultrasound imaging.
@@ -9,12 +17,39 @@ The library is built using TensorFlow/Keras and integrates with models hosted on
 
 **From View Classification to Segmentation and Timing Detection — All in One Library**
 
-<p align="center">
-  <img src="echoforge/images/classificaiton.png" width="32%" alt="View Classification"/>
+<!-- <p align="center">
+  <img src="echoforge/images/calssifcation_view.mp4" width="32%" alt="View Classification"/>
   <img src="echoforge/images/segmentaion.gif" width="32%" alt="LV Segmentation"/>
   <img src="echoforge/images/phase_detection_banner.png" width="32%" alt="Phase Detection"/>
+</p> -->
+
+### From View Classification to Segmentation and Timing Detection
+
+**1. View Classification**
+
+<p align="center">
+  <video width="85%" autoplay loop muted playsinline>
+    <source src="echoforge/images/calssifcation_view.mp4" type="video/mp4">
+  </video>
 </p>
-<p align="center"><sub>Illustrative graphics (not real patient data).</sub></p>
+
+**2. Left Ventricular Segmentation**
+
+<p align="center">
+  <img src="echoforge/images/segmentaion.gif" width="65%" alt="Left Ventricular Segmentation"/>
+</p>
+
+**3. Cardiac Phase Detection**
+
+<p align="center">
+  <video width="85%" autoplay loop muted playsinline>
+    <source src="echoforge/images/phase.mp4" type="video/mp4">
+  </video>
+</p>
+
+<p align="center">
+  <em>Illustrative graphics (not real patient data).</em>
+</p>
 
 ---
 
