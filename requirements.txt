@@ -4,3 +4,7 @@ pandas
 Pillow
 matplotlib
 huggingface_hub
+scipy
+scikit-image
+opencv-python
+pydicom
