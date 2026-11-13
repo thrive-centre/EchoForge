@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "model": "Chrono tracking and point-initialization models",
+  "research_only": true,
+  "assets": [
+    {
+      "path": "models/chrono_union/seed0_step332500.pt",
+      "bytes": 13919142,
+      "sha256": "da79ccef2c5eba4fece133fb1846476a3d45f62947915e5eb8b6096453dabd96"
+    },
+    {
+      "path": "models/chrono_union/seed1_step320000.pt",
+      "bytes": 13915174,
+      "sha256": "f9cce6279bc0e9e684c870bbb791784de11fcc31ac40c159fe9ed54a8983cd5e"
+    },
+    {
+      "path": "models/lv_cavity/resnet34.pt",
+      "bytes": 97869560,
+      "sha256": "b6964a0885f1f5e35c533747fc78f4abd9cc1c966080bbe79dedad6d3f2d4d85"
+    },
+    {
+      "path": "models/lv_cavity/efficientnet-b4.pt",
+      "bytes": 81613040,
+      "sha256": "17dff30cf55e0386af50aaee8ccae09da75ade0cbc4f290e571ce2ce1001b61d"
+    },
+    {
+      "path": "models/lv_cavity/se_resnext50_32x4d.pt",
+      "bytes": 138468666,
+      "sha256": "1f67a2a9f25d9b67c6cd6e2214c5db0eb622701ce35948385e5bbbddc297a038"
+    },
+    {
+      "path": "models/myocardial_wall/resnet34.pt",
+      "bytes": 97869560,
+      "sha256": "65b2b765fc8015728a99149274cc4b0eabea7532cf190d11affa20a4eba14f1c"
+    },
+    {
+      "path": "models/myocardial_wall/efficientnet-b4.pt",
+      "bytes": 81613040,
+      "sha256": "9568300c539d77189f59fef17ca1706f2305c6837b37a3d48133ef5d50e0fa61"
+    },
+    {
+      "path": "models/myocardial_wall/se_resnext50_32x4d.pt",
+      "bytes": 138468666,
+      "sha256": "cf7fe602ec63904f5a7db01e46dd249815ee07a0b4221000310982863d59d958"
+    }
+  ],
+  "source_notices": "See echoforge/chrono_tracker.py in the EchoForge code branch.",
+  "patient_images_or_annotations_included": false
+}
