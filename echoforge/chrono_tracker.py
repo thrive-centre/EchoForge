@@ -107,6 +107,10 @@ class Config:
 
     def environment(self):
         env = dict(os.environ)
+        for name in ('PYTHONPATH', 'PYTHONHOME'):
+            env.pop(name, None)
+        env['PYTHONNOUSERSITE'] = '1'
+        env['PATH'] = str(Path(self.python).parent) + os.pathsep + env.get('PATH', os.defpath)
         env.update(CHRONO_WEIGHTS_DIR=self.weights_dir, CHRONO_CAVITY_WEIGHTS_DIR=self.cavity_weights_dir,
             CHRONO_WALL_WEIGHTS_DIR=self.wall_weights_dir, CHRONO_JOINT_SOURCE_MODEL=self.joint_source_model,
             CHRONO_OBSERVED_SOURCE_RECOVERY='joint_common_v28', MTCHRONO_SDPA='0',
@@ -119,6 +123,178 @@ class Config:
         if self.device == 'cpu':
             env['CUDA_VISIBLE_DEVICES'] = ''
         return env
+
+
+# The tracker owns this cache only; the host's Python and EF dependencies are untouched.
+RUNTIME_VERSION = 'linux-cpu-312-v1'
+PYTHON_VERSION = '3.12.13'
+UV_URL = 'https://files.pythonhosted.org/packages/de/70/3347f736911b73df1f31c0823d6502891f3c49fdeb157fe8060b18c08d1c/uv-0.11.21-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl'
+UV_SHA256 = 'b9ecdefa81db7e966d1655988cad6f840316228381dd69131ebc4ae9362bbccd'
+WEIGHTS_REVISION = 'cbccce327cc59dc6e63e8c6bba61a456dae39975'
+JOINT_SOURCE_URL = 'https://huggingface.co/zeahub/augmented-camus-segmentation/resolve/0bcab35ffa2dd05c0b5a92f3a2001cb9cf4878c6/model.onnx'
+
+
+def _setup_tick(progress, cancelled, message):
+    if cancelled and cancelled():
+        raise ComponentError('cancelled', 'Tracking cancelled.')
+    if progress:
+        progress(0., message)
+
+
+def _download(url, destination, expected, *, progress=None, cancelled=None):
+    """Publish a download only after its pinned SHA256 matches; retry interrupted transfers."""
+    import urllib.error
+    import urllib.request
+    destination = Path(destination)
+    if destination.is_file() and _sha(destination) == expected:
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    for attempt in range(2):
+        temporary = destination.with_name(destination.name + '.' + uuid.uuid4().hex + '.part')
+        try:
+            _setup_tick(progress, cancelled, 'Downloading tracking files: ' + destination.name)
+            digest = hashlib.sha256()
+            request = urllib.request.Request(url, headers={'User-Agent': 'EchoForge-Tracking/1'})
+            with urllib.request.urlopen(request, timeout=60) as response, temporary.open('wb') as output:
+                last_tick = time.monotonic()
+                for chunk in iter(lambda: response.read(1024 * 1024), b''):
+                    output.write(chunk)
+                    digest.update(chunk)
+                    if cancelled and cancelled():
+                        raise ComponentError('cancelled', 'Tracking cancelled.')
+                    if time.monotonic() - last_tick > 5:
+                        _setup_tick(progress, cancelled, 'Downloading tracking files: ' + destination.name)
+                        last_tick = time.monotonic()
+                output.flush()
+                os.fsync(output.fileno())
+            if digest.hexdigest() != expected:
+                raise ComponentError('download_integrity_error', 'A tracking download failed verification; it was not installed.')
+            temporary.replace(destination)
+            return
+        except (OSError, urllib.error.URLError) as error:
+            if attempt == 1:
+                raise ComponentError('runtime_unavailable', 'Tracking setup could not download its files. Check the connection and retry the upload.') from error
+        finally:
+            temporary.unlink(missing_ok=True)
+
+
+def _setup_command(arguments, root, environment, progress, cancelled, message, timeout=1200, lock_fd=None):
+    """Run setup in a separate process group, with a bounded wait and a private log."""
+    _setup_tick(progress, cancelled, message)
+    with (root / 'setup.log').open('ab') as log:
+        # A surviving installer retains the lock after a hard host termination.
+        # A retry must not delete a runtime that this process is still writing.
+        process = subprocess.Popen(arguments, env=environment, stdout=log, stderr=subprocess.STDOUT,
+                                   start_new_session=True, cwd=str(root),
+                                   pass_fds=() if lock_fd is None else (lock_fd,))
+        record = dict(pid=process.pid, birth=birth(process.pid))
+        start = last_tick = time.monotonic()
+        try:
+            while not exited_without_reaping(process):
+                if time.monotonic() - start > timeout:
+                    raise ComponentError('runtime_unavailable', 'Tracking setup timed out. Retry the upload to resume setup.')
+                if cancelled and cancelled():
+                    raise ComponentError('cancelled', 'Tracking cancelled.')
+                if time.monotonic() - last_tick > 5:
+                    _setup_tick(progress, cancelled, message)
+                    last_tick = time.monotonic()
+                time.sleep(.1)
+        finally:
+            try:
+                stop_worker(record)
+            finally:
+                process.wait(timeout=5)
+    if process.returncode:
+        raise ComponentError('runtime_unavailable', 'Tracking setup failed. See ' + str(root / 'setup.log'))
+
+
+def _automatic_config(progress=None, cancelled=None):
+    """First-use Linux setup, isolated from the app's interpreter and dependencies."""
+    # Existing deployments with explicit locations keep their current configuration.
+    if any(os.environ.get(name) for name in ('CHRONO_PYTHON', 'CHRONO_MODEL_ROOT',
+            'CHRONO_WEIGHTS_DIR', 'CHRONO_CAVITY_WEIGHTS_DIR', 'CHRONO_WALL_WEIGHTS_DIR',
+            'CHRONO_JOINT_SOURCE_MODEL')):
+        return Config.from_environment()
+    import fcntl
+    import platform
+    import shutil
+    import zipfile
+    if sys.platform != 'linux' or platform.machine() not in ('x86_64', 'AMD64'):
+        raise ComponentError('runtime_unavailable', 'Automatic tracking setup currently supports Linux x86-64.')
+    if os.environ.get('CHRONO_DEVICE', 'cpu') != 'cpu':
+        raise ComponentError('configuration_error', 'Automatic setup uses CPU; a custom CUDA runtime requires CHRONO_PYTHON.')
+    root = Path(os.environ.get('CHRONO_CACHE_DIR', Path.home() / '.echoforge' / 'chrono')).expanduser().resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    with (root / 'setup.lock').open('a') as lock:
+        started = time.monotonic()
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() - started > 1800:
+                    raise ComponentError('runtime_unavailable', 'Another tracking setup is still running; retry shortly.')
+                _setup_tick(progress, cancelled, 'Waiting for tracking setup')
+                time.sleep(1)
+        _setup_tick(progress, cancelled, 'Preparing tracking')
+        runtime = root / RUNTIME_VERSION
+        python = runtime / 'bin' / 'python'
+        requirements_sha = hashlib.sha256(RUNTIME_REQUIREMENTS.encode()).hexdigest()
+        identity = dict(version=RUNTIME_VERSION, python=PYTHON_VERSION, requirements_sha256=requirements_sha,
+                        installer_sha256=UV_SHA256)
+        ready = runtime / 'ready.json'
+        try:
+            installed = python.is_file() and json.loads(ready.read_text()) == identity
+        except (OSError, ValueError):
+            installed = False
+        if not installed:
+            _download(UV_URL, root / 'uv.whl', UV_SHA256, progress=progress, cancelled=cancelled)
+            with zipfile.ZipFile(root / 'uv.whl') as wheel:
+                binary = wheel.read('uv-0.11.21.data/scripts/uv')
+            uv = root / 'uv'
+            temporary = root / ('uv.' + uuid.uuid4().hex)
+            temporary.write_bytes(binary)
+            temporary.chmod(0o700)
+            temporary.replace(uv)
+            # Only an incomplete version-specific private runtime is replaced.
+            if runtime.exists():
+                shutil.rmtree(runtime)
+            environment = {name: value for name, value in os.environ.items() if not name.startswith('UV_')}
+            for name in ('PYTHONPATH', 'PYTHONHOME', 'VIRTUAL_ENV', 'UV_PROJECT_ENVIRONMENT'):
+                environment.pop(name, None)
+            environment.update(UV_PYTHON_INSTALL_DIR=str(root / 'python'), UV_CACHE_DIR=str(root / 'downloads'),
+                UV_NO_CONFIG='1', PYTHONNOUSERSITE='1',
+                CUDA_VISIBLE_DEVICES='', OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
+            _setup_command([str(uv), 'venv', '--python', PYTHON_VERSION, '--managed-python', str(runtime)],
+                root, environment, progress, cancelled, 'Installing the tracking runtime', lock_fd=lock.fileno())
+            requirements = root / 'runtime-requirements.txt'
+            requirements.write_text(RUNTIME_REQUIREMENTS)
+            _setup_command([str(uv), 'pip', 'install', '--python', str(python), '--require-hashes',
+                '--no-deps', '--only-binary', ':all:', '-r', str(requirements)],
+                root, environment, progress, cancelled, 'Installing tracking dependencies', lock_fd=lock.fileno())
+            _setup_command([str(python), '-I', '-B', '-c', RUNTIME_PROBE, str(Path(__file__).resolve())],
+                root, environment, progress, cancelled, 'Checking the tracking runtime', timeout=120, lock_fd=lock.fileno())
+            _json(ready, identity)
+        models = root / 'models'
+        folders = {'weights_dir': 'chrono_union', 'cavity_weights_dir': 'lv_cavity',
+                   'wall_weights_dir': 'myocardial_wall', 'joint_source_model': 'joint_source/model.onnx'}
+        config = dataclasses.replace(Config.from_environment(), python=str(python),
+                                    **{key: str(models / value) for key, value in folders.items()})
+        for group, files in ASSET_PINS.items():
+            for filename, digest in files:
+                path = Path(getattr(config, group))
+                if filename:
+                    path = path / filename
+                relative = path.relative_to(models).as_posix()
+                url = (JOINT_SOURCE_URL if group == 'joint_source_model' else
+                       'https://media.githubusercontent.com/media/thrive-centre/EchoForge/' + WEIGHTS_REVISION + '/models/' + relative)
+                _download(url, path, digest, progress=progress, cancelled=cancelled)
+        _assets(config)
+        return config
+
+
+RUNTIME_REQUIREMENTS = 'https://download.pytorch.org/whl/cpu/torch-2.6.0%2Bcpu-cp312-cp312-linux_x86_64.whl --hash=sha256:59e78aa0c690f70734e42670036d6b541930b8eabbaa18d94e090abf14cc4d91\nhttps://download.pytorch.org/whl/cpu/torchvision-0.21.0%2Bcpu-cp312-cp312-linux_x86_64.whl --hash=sha256:d6874431e678ba107b60a83f255c33f3755f06bad587b1b919aa514ec325dcd8\nhttps://files.pythonhosted.org/packages/39/68/e9f1126d757653496dbc096cb429014347a36b228f5a991dae2c6b6cfd40/numpy-2.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl --hash=sha256:0123ffdaa88fa4ab64835dcbde75dcdf89c453c922f18dced6e27c90d1d0ec5a\nhttps://files.pythonhosted.org/packages/88/ab/6ecdc526d509d33814835447bbbeedbebdec7cca46ef495a61b00a35b4bf/scipy-1.13.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl --hash=sha256:de3ade0e53bc1f21358aa74ff4830235d716211d7d077e340c7349bc3542e884\nhttps://files.pythonhosted.org/packages/fe/7c/d8b1330458e4d2f3f45d9508796d7caf0c0d3764c00c823d10f6f1a3b76d/pillow-11.2.1-cp312-cp312-manylinux_2_28_x86_64.whl --hash=sha256:b2dbea1012ccb784a65349f57bbc93730b96e85b42e9bf7b01ef40443db720b4\nhttps://files.pythonhosted.org/packages/ef/62/a50e5ac6191a498ad631e54df13d7e2d7eeb1325b15ee9ea1ee3ec065aaa/segmentation_models_pytorch-0.5.0-py3-none-any.whl --hash=sha256:c34e09047771aa4dd8878b4f899e8125700cd1f8f7db16e58c37204154151a05\nhttps://files.pythonhosted.org/packages/47/42/2f71f5680834688a9c81becbe5c5bb996fd33eaed5c66ae0606c3b1d6a02/onnxruntime-1.20.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl --hash=sha256:bb71a814f66517a65628c9e4a2bb530a6edd2cd5d87ffa0af0f6f773a027d99e\nhttps://files.pythonhosted.org/packages/2a/09/f8d8f8f31e4483c10a906437b4ce31bdf3d6d417b73fe33f1a8b59e34228/einops-0.8.2-py3-none-any.whl --hash=sha256:54058201ac7087911181bfec4af6091bb59380360f069276601256a76af08193\nhttps://files.pythonhosted.org/packages/27/a6/98651e752a49f341aa99aa3f6c8ba361728dfc064242884355419df63669/pydicom-3.0.1-py3-none-any.whl --hash=sha256:db32f78b2641bd7972096b8289111ddab01fb221610de8d7afa835eb938adb41\nhttps://files.pythonhosted.org/packages/77/89/96e2e4de3b89e7363931c70eb58bded22656f5512bde18eb7a9272ce48d8/osqp-1.1.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl --hash=sha256:6ceef7fb4f332892b6e0bbc17323d5c9e028c3f9db726b62a15d876d0f81cc06\nhttps://files.pythonhosted.org/packages/13/37/a065dc3bd6e49423a6532c642ca7378d3f467b1ef44c2800c937af7f9739/filelock-3.29.4-py3-none-any.whl --hash=sha256:dac1648087d5115554850d113e7dd8c83ab2d38e3435dde2d4f163847e57b767\nhttps://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl --hash=sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548\nhttps://files.pythonhosted.org/packages/9e/c9/b2622292ea83fbb4ec318f5b9ab867d0a28ab43c5717bb85b0a5f6b3b0a4/networkx-3.6.1-py3-none-any.whl --hash=sha256:d47fbf302e7d9cbbb9e2555a0d267983d2aa476bac30e90dfbe5669bd57f3762\nhttps://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl --hash=sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67\nhttps://files.pythonhosted.org/packages/51/c7/b64cae5dba3a1b138d7123ec36bb5ccd39d39939f18454407e5468f4763f/fsspec-2025.12.0-py3-none-any.whl --hash=sha256:8bf1fe301b7d8acfa6e8571e3b1c3d158f909666642431cc78a1b7b4dbc5ec5b\nhttps://files.pythonhosted.org/packages/9d/76/f789f7a86709c6b087c5a2f52f911838cad707cc613162401badc665acfe/setuptools-82.0.1-py3-none-any.whl --hash=sha256:a59e362652f08dcd477c78bb6e7bd9d80a7995bc73ce773050228a348ce2e5bb\nhttps://files.pythonhosted.org/packages/b2/fe/81695a1aa331a842b582453b605175f419fe8540355886031328089d840a/sympy-1.13.1-py3-none-any.whl --hash=sha256:db36cdc64bf61b9b24578b6f7bab1ecdd2452cf008f34faa33776680c26d66f8\nhttps://files.pythonhosted.org/packages/b2/a5/558da89f66464d8d0229ff497e8b8666977de2d8cf48c28a2862ecf1250f/huggingface_hub-1.19.0-py3-none-any.whl --hash=sha256:1dc72e1f6b4d6df6b30eb72e57d00514ef453d660f04af2b87f0e67267f31ee0\nhttps://files.pythonhosted.org/packages/28/50/f203ff3a3ddfe19308efc83c5a3a29ed02bf786732ec35e68bf9162f3365/safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl --hash=sha256:fd6f3f93c9a0a7cc2788ee63fb763353d4bd2e89b0751bc78fcf7dda00bea774\nhttps://files.pythonhosted.org/packages/1f/2e/26bab7686ff4aed48f8f5f6c23e2aa37b7a37ddd9effe3aa61e908fd518f/timm-1.0.27-py3-none-any.whl --hash=sha256:5ff07c9ddf53cbada88eab1c93ff175c64cab683b5a2fddf863bcee985926f89\nhttps://files.pythonhosted.org/packages/d0/30/dc54f88dd4a2b5dc8a0279bdd7270e735851848b762aeb1c1184ed1f6b14/tqdm-4.67.1-py3-none-any.whl --hash=sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2\nhttps://files.pythonhosted.org/packages/a7/06/3d6badcf13db419e25b07041d9c7b4a2c331d3f4e7134445ec5df57714cd/coloredlogs-15.0.1-py2.py3-none-any.whl --hash=sha256:612ee75c546f53e92e70049c9dbfcc18c935a2b9a53b66085ce9ef6a6e5c0934\nhttps://files.pythonhosted.org/packages/e8/2d/d2a548598be01649e2d46231d151a6c56d10b964d94043a335ae56ea2d92/flatbuffers-25.12.19-py2.py3-none-any.whl --hash=sha256:7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4\nhttps://files.pythonhosted.org/packages/88/ef/eb23f262cca3c0c4eb7ab1933c3b1f03d021f2c48f54763065b6f0e321be/packaging-24.2-py3-none-any.whl --hash=sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759\nhttps://files.pythonhosted.org/packages/e4/be/5b3cfe508bfab6761414ff944e3366eb13be4fd71efcd69450f89ba39f43/protobuf-7.35.1-cp310-abi3-manylinux2014_x86_64.whl --hash=sha256:74758715c53d7158fb76caf4f0cfdacc5329a4b1bb994f865d6cf302d413a1c4\nhttps://files.pythonhosted.org/packages/7b/91/984aca2ec129e2757d1e4e3c81c3fcda9d0f85b74670a094cc443d9ee949/joblib-1.5.3-py3-none-any.whl --hash=sha256:5fc3c5039fc5ca8c0276333a188bbd59d6b7ab37fe6632daa76bc7f9ec18e713\nhttps://files.pythonhosted.org/packages/4f/a7/aeedb5140afa41fc74c225e9184ab96723a6e873b6ee1c9fede7283456d8/markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl --hash=sha256:8e124f974786f831d6043728e38296969d3579db8896fe004682f5758e613581\nhttps://files.pythonhosted.org/packages/43/e3/7d92a15f894aa0c9c4b49b8ee9ac9850d6e63b03c9c32c0367a13ae62209/mpmath-1.3.0-py3-none-any.whl --hash=sha256:a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c\nhttps://files.pythonhosted.org/packages/31/7d/164b7ffc8624fe9efb4221bf9af485d5c1e41b9ae118045d2b6dc5457d8b/click-8.5.1-py3-none-any.whl --hash=sha256:8bb5376d2006950386f8c6427613334a2acadc5f559cb80e638d00b4df957e37\nhttps://files.pythonhosted.org/packages/de/cc/f99f4bc7295023d7bd9ebbfd51f75cc530ca262c1227666268b8208f4b77/hf_xet-1.5.1-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl --hash=sha256:892e3a3a3aecc12aded8b93cf4f9cd059282c7de0732f7d55026f3abdf474350\nhttps://files.pythonhosted.org/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl --hash=sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad\nhttps://files.pythonhosted.org/packages/b9/2b/614b4752f2e127db5cc206abc23a8c19678e92b23c3db30fc86ab731d3bd/PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl --hash=sha256:80bab7bfc629882493af4aa31a4cfa43a4c57c83813253626916b8c7ada83476\nhttps://files.pythonhosted.org/packages/3f/f9/2b3ff4e56e5fa7debfaf9eb135d0da96f3e9a1d5b27222223c7296336e5f/typer-0.25.1-py3-none-any.whl --hash=sha256:75caa44ed46a03fb2dab8808753ffacdbfea88495e74c85a28c5eefcf5f39c89\nhttps://files.pythonhosted.org/packages/f0/0f/310fb31e39e2d734ccaa2c0fb981ee41f7bd5056ce9bc29b2248bd569169/humanfriendly-10.0-py2.py3-none-any.whl --hash=sha256:1697e1a8a8f550fd43c2865cd84542fc175a61dcb779b6fee18cf6b6ccba1477\nhttps://files.pythonhosted.org/packages/da/42/e921fccf5015463e32a3cf6ee7f980a6ed0f395ceeaa45060b61d86486c2/anyio-4.13.0-py3-none-any.whl --hash=sha256:08b310f9e24a9594186fd75b4f73f4a4152069e3853f1ed8bfbf58369f4ad708\nhttps://files.pythonhosted.org/packages/59/8c/57e832b7af6d7c5abe66eb3fbe3a3a32f4d11ea23a1aa7131371035be991/certifi-2026.5.20-py3-none-any.whl --hash=sha256:3c52e209ba0a4ad7aebe60436a4ab349c39e1e602e8c134221e546902ad25897\nhttps://files.pythonhosted.org/packages/7e/f5/f66802a942d491edb555dd61e3a9961140fd64c90bce1eafd741609d334d/httpcore-1.0.9-py3-none-any.whl --hash=sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55\nhttps://files.pythonhosted.org/packages/1e/5e/d4e9f1a599fb8e573b7b87160658329fbf28d19eac2718f51fc3def3aa5a/idna-3.18-py3-none-any.whl --hash=sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2\nhttps://files.pythonhosted.org/packages/e0/f9/0595336914c5619e5f28a1fb793285925a8cd4b432c9da0a987836c7f822/shellingham-1.5.4-py2.py3-none-any.whl --hash=sha256:7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686\nhttps://files.pythonhosted.org/packages/82/3b/64d4899d73f91ba49a8c18a8ff3f0ea8f1c1d75481760df8c68ef5235bf5/rich-15.0.0-py3-none-any.whl --hash=sha256:33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb\nhttps://files.pythonhosted.org/packages/1e/d3/26bf1008eb3d2daa8ef4cacc7f3bfdc11818d111f7e2d0201bc6e3b49d45/annotated_doc-0.0.4-py3-none-any.whl --hash=sha256:571ac1dc6991c450b25a9c2d84a3705e2ae7a53467b5d111c24fa8baabbed320\nhttps://files.pythonhosted.org/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl --hash=sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86\nhttps://files.pythonhosted.org/packages/b3/81/4da04ced5a082363ecfa159c010d200ecbd959ae410c10c0264a38cac0f5/markdown_it_py-4.2.0-py3-none-any.whl --hash=sha256:9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a\nhttps://files.pythonhosted.org/packages/f4/7e/a72dd26f3b0f4f2bf1dd8923c85f7ceb43172af56d63c7383eb62b332364/pygments-2.20.0-py3-none-any.whl --hash=sha256:81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176\nhttps://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl --hash=sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8\nhttps://files.pythonhosted.org/packages/dd/5c/c139a7876099916879609372bfa513b7f1257f7f1a908b0bdc1c2328241b/opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl --hash=sha256:0e0a27c19dd1f40ddff94976cfe43066fbbe9dfbb2ec1907d66c19caef42a57b\nhttps://files.pythonhosted.org/packages/a0/2d/43c8522a2038e9d0e7dbdf3a61195ecc31ca576fb1527a528c877e87d973/imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl --hash=sha256:c7e46fcec401dd990405049d2e2f475e2b397779df2519b544b8aab515195282\n'
+RUNTIME_PROBE = 'import importlib.util, pathlib, sys\nimport cv2, einops, numpy, onnxruntime, osqp, pydicom, scipy, segmentation_models_pytorch, torch, torchvision\nassert torch.version.cuda is None, torch.version.cuda\nassert "CPUExecutionProvider" in onnxruntime.get_available_providers()\nassert "FFMPEG:                      YES" in cv2.getBuildInformation()\nassert not any("Pipeline/.venv" in p or "EchoForge_Studio/.venv-integration" in p for p in sys.path)\nspec = importlib.util.spec_from_file_location("isolated_tracker_probe", sys.argv[1])\nmodule = importlib.util.module_from_spec(spec)\nsys.modules[spec.name] = module\nspec.loader.exec_module(module)\nengine = module._engine()\nmodule._io()\nfor version in ("15", "19", "27"):\n    engine._material_solver(version)\nprint("CPU runtime and all embedded solver imports passed")\n\nimport imageio_ffmpeg, subprocess\nencoder = pathlib.Path(imageio_ffmpeg.get_ffmpeg_exe())\nsubprocess.run([str(encoder), \'-version\'], check=True, stdout=subprocess.DEVNULL)\nlink = pathlib.Path(sys.executable).parent / \'ffmpeg\'\nlink.unlink(missing_ok=True)\nlink.symlink_to(encoder)\nprint(\'Private video encoder passed\')\n'
 
 
 def _assets(config):
@@ -216,13 +392,13 @@ def run_tracking(input_path, *, output_dir, public_base_url='', config=None, pro
     """
     import fcntl
     import shutil
-    config = config or Config.from_environment()
-    config.validate()
     source = Path(input_path).resolve(strict=True)
     if not source.is_file() or source.stat().st_size == 0:
         raise ComponentError('invalid_input', 'A nonempty uploaded cine is required.')
     if source.suffix.lower() not in ('.dcm', '.mp4', '.avi', '.mov', '.mkv'):
         raise ComponentError('invalid_input', 'Unsupported cine format.')
+    config = config or _automatic_config(progress, cancelled)
+    config.validate()
     root = Path(output_dir).resolve() / 'chrono'
     if root.is_symlink():
         raise ComponentError('invalid_artifact', 'A linked component output directory was rejected.')
