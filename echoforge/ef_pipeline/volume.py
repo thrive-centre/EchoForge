@@ -3,7 +3,8 @@ LV volume from a binary mask by the disk-summation (method of discs) approximati
 
 Adapted from `maskvolume.py` (P. Naidoo, 2022) and `drawhelper.py` of the original in-house
 code; made dependency-light (no sympy, no star imports) and independent of the mask size.
-Returns the volume in pixel^3: multiply by pixel_spacing_cm**3 to get mL.
+Returns the volume in pixel^3 (multiply by pixel_spacing_cm**3 to get mL) and the
+long-axis geometry used to compute it, in mask pixel coordinates (origin top-left).
 """
 import math
 
@@ -54,8 +55,21 @@ def _intersections(canvas, poly, pt1, pt2):
     return hits
 
 
+def _xy(point):
+    return [round(float(point[0]), 1), round(float(point[1]), 1)]
+
+
+def _empty_geometry():
+    return {"apex": None, "mitral_midpoint": None, "annulus_left": None, "annulus_right": None, "discs": []}
+
+
 def mask_volume(mask, k=20):
-    """Volume (pixel^3) of a binary LV mask (2-D array of 0/1), using `k` discs along the long axis."""
+    """Volume and long-axis geometry of a binary LV mask.
+
+    Returns `(volume_px3, geometry)`. `geometry` holds the apex, mitral midpoint,
+    annulus points, and each disc's two endpoints, all in mask pixels. An empty
+    mask returns `0.0` and null points.
+    """
     mask = np.asarray(mask)
     if mask.ndim == 3:
         mask = mask[:, :, 0]
@@ -63,10 +77,10 @@ def mask_volume(mask, k=20):
 
     contours, _ = cv2.findContours(mask_rgb[..., 0], cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
-        return 0.0
+        return 0.0, _empty_geometry()
     poly = max(contours, key=cv2.contourArea)
     if cv2.contourArea(poly) <= 0:
-        return 0.0
+        return 0.0, _empty_geometry()
 
     x, y, w, h = cv2.boundingRect(poly)
     min_col, max_col, max_row = x - w, x + 2 * w, y + 2 * h
@@ -97,6 +111,7 @@ def mask_volume(mask, k=20):
 
     blank = np.zeros_like(mask_rgb)
     vol, start = 0.0, (float(start_pt[0]), float(start_pt[1]))
+    discs = []
     while True:
         end = _point_at(start, v, step)
         vh = (end[0] - start[0], end[1] - start[1])
@@ -109,4 +124,12 @@ def mask_volume(mask, k=20):
             break
         width = _dist(hits[0], hits[-1])
         vol += math.pi * (width / 2.0) ** 2 * step
-    return vol
+        discs.append([_xy(hits[0]), _xy(hits[-1])])
+    geometry = {
+        "apex": _xy(max_p),
+        "mitral_midpoint": _xy(true_mid),
+        "annulus_left": _xy(left),
+        "annulus_right": _xy(right),
+        "discs": discs,
+    }
+    return vol, geometry
