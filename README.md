@@ -114,7 +114,7 @@ model = load_model("EchoFine_classifier", pretrained=True)
 | Task | Model | Docs |
 |---|---|---|
 | View classification | EchoFine (classifier, contrastive encoder, TMED2), EchoSDNet | [Classification](echoforge/classification/README.md) · [EchoFine](echoforge/classification/models/EchoFine/README.md) · [EchoSDNet](echoforge/classification/models/EchoSDNet/README.md) |
-| LV segmentation | EchoLVSNet | [Segmentation](echoforge/segmentation/README.md) · [EchoLVSNet](echoforge/segmentation/models/echolvsnet/README.md) |
+| LV segmentation | EchoLVSNet, MCLV | [Segmentation](echoforge/segmentation/README.md) · [EchoLVSNet](echoforge/segmentation/models/echolvsnet/README.md) · [MCLV](echoforge/segmentation/models/mclv/README.md) |
 | Phase detection (ED/ES) | EchoPDNet | [Phase Detection](echoforge/phasedetection/README.md) · [EchoPDNet](echoforge/phasedetection/models/echopdnet/README.md) |
 
 Weights, datasets and model details are available through [THRIVE](https://www.thrive-centre.com), including the [datasets page](https://www.thrive-centre.com/datasets) (e.g. [TTE47](https://www.thrive-centre.com/datasets/TTE47)). Registered model names are in `echoforge/config/registry.json`, or call `list_models()`.

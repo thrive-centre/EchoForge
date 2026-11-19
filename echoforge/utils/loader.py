@@ -68,7 +68,7 @@ def download_model(model_name):
         if os.path.exists(local_path):
             print(" Model already cached locally:", local_path)
             return local_path
-        print("⬇  Downloading model from Hugging Face...")
+        print("Downloading model from Hugging Face...")
         downloaded = hf_hub_download(
             repo_id=repo_id, filename=filename, subfolder=subfolder, token=token
         )
@@ -77,7 +77,7 @@ def download_model(model_name):
         print(f" Saving model to: {local_path}")
         return local_path
 
-    print("⬇  Downloading model repository from Hugging Face...")
+    print("Downloading model repository from Hugging Face...")
     patterns = [f"{subfolder}/*"] if subfolder else None
     root = snapshot_download(repo_id=repo_id, token=token, allow_patterns=patterns)
     return os.path.join(root, subfolder) if subfolder else root

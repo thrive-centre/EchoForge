@@ -5,6 +5,7 @@
     "EchoFine_classifier": "https://huggingface.co/thrive-2025/EchoFine_classifier",
     "EchoFine_TMED2": "https://huggingface.co/thrive-2025/EchoFine_TMED2_fold0",
     "EchoLVSNet": "https://huggingface.co/thrive-2025/echolvsnet",
+    "MCLV": "https://huggingface.co/thrive-2025/MCLV",
     "EchoSDNet": "https://huggingface.co/thrive-2025/EchoSDNet",
     "EchoPDNet": "https://huggingface.co/thrive-2025/EchoPDNet",
     "A4C_ROT": "https://huggingface.co/thrive-2025/PLACEHOLDER-A4C-ROT",
