@@ -11,10 +11,7 @@ import os
 import cv2
 import numpy as np
 
-from .pipeline_sever_volume import (
-    read_input,
-    clean_curve,
-)
+from .pipeline import read_input
 from .volume import mask_volume
 from .volume_methods import select_beats
 

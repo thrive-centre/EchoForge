@@ -8,7 +8,7 @@ import json
 import os
 import numpy as np
 
-from .pipeline_sever_volume import read_input, segment_frames
+from .pipeline import read_input, segment_frame
 from .volume import mask_volume
 from .volume_methods import select_beats
 
@@ -28,7 +28,7 @@ def compute_echolvsnet_volume_ef(
     masks = []
     raw_volumes = []
     for i in range(0, len(frames), 4):
-        batch_masks = segment_frames(frames[i:i + 4], seg_model)
+        batch_masks = [segment_frame(frame, seg_model) for frame in frames[i:i + 4]]
         masks.extend(batch_masks)
         raw_volumes.extend(
             float(mask_volume(mask, 20)) if mask.any() else 0.0

@@ -1,10 +1,31 @@
 import numpy as np
 from scipy.signal import find_peaks
 
-from .pipeline_sever_volume import clean_curve
-
-
 MIN_PROMINENCE = 0.3
+OUTLIER_WIN = 5
+OUTLIER_SIGMAS = 3.0
+
+
+def clean_curve(volumes, win=OUTLIER_WIN, n_sigmas=OUTLIER_SIGMAS):
+    """Interpolate empty masks and single-frame spikes in a volume trajectory."""
+    values = np.asarray(volumes, dtype=float)
+    if values.size == 0:
+        raise RuntimeError("No frames available for volume analysis")
+
+    pad = win // 2
+    padded = np.pad(values, pad, mode="edge")
+    median = np.array([
+        np.median(padded[index:index + win])
+        for index in range(len(values))
+    ])
+    sigma = 1.4826 * np.median(np.abs(values - median))
+    threshold = n_sigmas * max(sigma, 0.02 * max(float(np.median(values)), 1e-8))
+    outlier = (np.abs(values - median) > threshold) | (values <= 0)
+    good = ~outlier
+    if good.sum() < 2:
+        raise RuntimeError("Segmentation failed on (almost) every frame")
+    indices = np.arange(len(values))
+    return np.interp(indices, indices[good], values[good]), outlier
 
 
 def select_beats(volumes):
