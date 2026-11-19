@@ -1,5 +1,8 @@
 # EF Pipeline Module
 
+> [!WARNING]
+> **Under maintenance:** The EF pipelines in this module are currently under development and validation. Their outputs, method comparisons, and reference accuracy should not be presented as final or clinically validated.
+
 > **EchoForge EF Pipeline** computes the left-ventricular ejection fraction (LVEF) from a single apical four-chamber (A4C) echo cine. It chains two existing EchoForge models, **EchoPDNet** (cardiac phase detection) and **EchoLVSNet** (LV segmentation), with a disk-summation volume estimate.
 
 ---
@@ -58,6 +61,40 @@ print(result["EF_mean"], result["beats"])
 result = compute_ef("clip.avi", pixel_spacing_mm=0.4)          # video; spacing optional
 ```
 
+### MCLV-only volume pipeline
+
+Use MCLV for segmentation and the disk-summation method for volumes without phase detection:
+
+```python
+from echoforge.ef_pipeline import compute_mclv_ef
+
+result = compute_mclv_ef("study.dcm", output_dir="mclv_ef_output")
+print(result["EF_mean"])
+```
+
+### Four EF methods
+
+```python
+from echoforge.ef_pipeline import (
+    compute_phase_echolvsnet_ef,
+    compute_echolvsnet_volume_ef,
+    compute_mclv_ef,
+    compute_phase_mclv_ef,
+)
+
+phase_echolvsnet = compute_phase_echolvsnet_ef("study.dcm")
+echolvsnet_volume = compute_echolvsnet_volume_ef("study.dcm")
+mclv_volume = compute_mclv_ef("study.dcm")
+phase_mclv = compute_phase_mclv_ef("study.dcm")
+```
+
+| Method | Phase detection | Segmentation | Beat detection |
+|---|---|---|---|
+| `compute_phase_echolvsnet_ef` | EchoPDNet | EchoLVSNet | EchoPDNet ED/ES pairs |
+| `compute_echolvsnet_volume_ef` | Not used | EchoLVSNet | Volume trajectory |
+| `compute_mclv_ef` | Not used | MCLV | Volume trajectory |
+| `compute_phase_mclv_ef` | EchoPDNet | MCLV | EchoPDNet ED/ES pairs |
+
 To process many files, load the models once and reuse them:
 ```python
 from echoforge import load_model
@@ -86,8 +123,12 @@ Adapted from the in-house `maskvolume.py` (P. Naidoo, 2022). `volume.py` works f
 | File | Purpose |
 |------|---------|
 | `pipeline.py` | `compute_ef()` and the steps above (I/O, phase curve, beat detection, segmentation, EF) |
+| `echolvsnet_volume_pipeline.py` | EchoLVSNet volume-trajectory method |
+| `mclv_pipeline.py` | MCLV volume-trajectory method |
+| `phase_mclv_pipeline.py` | EchoPDNet phase detection plus MCLV segmentation |
+| `volume_methods.py` | Shared multi-beat volume-trajectory detection |
 | `volume.py` | Disk-summation volume of a binary mask |
-| `__init__.py` | Exports `compute_ef` |
+| `__init__.py` | Exports the EF methods |
 
 ## 📦 Extra dependencies
 `opencv-python`, `scipy`, `pydicom`, `scikit-image` (in addition to the EchoForge requirements).
