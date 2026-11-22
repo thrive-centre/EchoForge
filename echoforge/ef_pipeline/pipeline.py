@@ -55,6 +55,39 @@ def _dicom_fps(ds):
     return None
 
 
+def _is_stored_ybr(frame):
+    """True when a 3-channel frame is still YCbCr rather than RGB.
+
+    pydicom converts YBR_FULL and YBR_FULL_422 to RGB and leaves the
+    Photometric Interpretation tag unchanged. Cb and Cr of real YCbCr sit near
+    128, while the brightness channel of an echo does not.
+    """
+    means = frame.reshape(-1, frame.shape[-1])[:, :3].mean(axis=0)
+    chroma_centered = abs(float(means[1]) - 128) < 20 and abs(float(means[2]) - 128) < 20
+    return chroma_centered and abs(float(means[0]) - float(means[1])) > 30
+
+
+def _gray_frame(frame, photometric):
+    """One uint8 grayscale frame. A YBR tag on RGB pixels is left as RGB."""
+    frame = np.asarray(frame)
+    if frame.ndim == 3 and frame.shape[-1] == 1:
+        frame = frame[..., 0]
+    if frame.ndim == 3:
+        frame = np.ascontiguousarray(frame[..., :3])
+        if str(photometric).startswith("YBR") and _is_stored_ybr(frame):
+            # DICOM order is Y, Cb, Cr. OpenCV's YCrCb is Y, Cr, Cb.
+            frame = cv2.cvtColor(np.ascontiguousarray(frame[..., [0, 2, 1]]), cv2.COLOR_YCrCb2RGB)
+        if frame.dtype != np.uint8:
+            frame = frame.astype(np.uint8)
+        frame = cv2.cvtColor(np.ascontiguousarray(frame), cv2.COLOR_RGB2GRAY)
+    elif frame.dtype != np.uint8:
+        peak = float(frame.max()) if frame.size else 0.0
+        frame = np.zeros(frame.shape[:2], np.uint8) if peak <= 0 else (
+            frame.astype(np.float32) / peak * 255.0
+        ).astype(np.uint8)
+    return np.ascontiguousarray(frame)
+
+
 def read_dicom(path):
     """Return (grayscale uint8 frames, pixel spacing in cm or None, fps or None) from a DICOM cine."""
     import pydicom
@@ -63,15 +96,7 @@ def read_dicom(path):
     if int(getattr(ds, "NumberOfFrames", 1)) == 1:
         arr = arr[None]
     photometric = str(getattr(ds, "PhotometricInterpretation", "MONOCHROME2"))
-    frames = []
-    for f in arr:
-        if f.ndim == 3:
-            if photometric.startswith("YBR"):
-                f = cv2.cvtColor(f.astype(np.uint8), cv2.COLOR_YCrCb2RGB)
-            f = cv2.cvtColor(f.astype(np.uint8), cv2.COLOR_RGB2GRAY)
-        elif f.dtype != np.uint8:
-            f = (f / max(float(f.max()), 1.0) * 255).astype(np.uint8)
-        frames.append(f)
+    frames = [_gray_frame(f, photometric) for f in arr]
 
     spacing = None
     if "PixelSpacing" in ds:
