@@ -1,5 +1,6 @@
 
 from .segmentation.models.echolvsnet.echolvsnet import build_echolvsnet
+from .segmentation.models.mclv.mclv import build_mclv
 from .classification.models.EchoFine.EchoFine_contrastive_encoder import build_echofine_contrastive_encoder
 from .classification.models.EchoFine.EchoFine_classifier import build_echofine_classifier
 from .classification.models.EchoFine.EchoFine_TMED2 import build_echofine_tmed2
@@ -23,6 +24,7 @@ def load_model(name, pretrained=True):
         "echofine_tmed2": build_echofine_tmed2,
         "echosdnet": build_EchoSDNet,
         "echolvsnet": build_echolvsnet,
+        "mclv": build_mclv,
     }
     key = name.lower()
     builder = builders.get(key)

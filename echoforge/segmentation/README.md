@@ -58,6 +58,7 @@ The following datasets have been used across various models in this module:
 |----------|----------|------------------|----------------------|------------|-------------|-------------|
 | | | | **Dice / IoU** | **Dice / IoU** | **Dice / IoU** | **Dice / IoU / EF / Volume** | |
 | [**EchoLVSNet**](models/echolvsnet/README.md) | LV Segmentation | U-Net | 0.91 / 0.85 | 0.94 / 0.88 | – / – | 0.92 / 0.85 / – / – |
+| [**MCLV**](models/mclv/README.md) | LV Segmentation | EchoLVSNet-based U-Net | 0.913 / 0.844 | 0.942 / 0.893 | 0.957 / 0.919 | 0.925 / 0.862 |
 
 ---
 
