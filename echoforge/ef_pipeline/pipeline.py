@@ -305,6 +305,7 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
 
     Returns:
         dict with `beats` (ED/ES frame, EDV, ESV, EF per beat), `EF_mean`, `EF_median`, `unit`,
+        `pixel_spacing_cm` (None when volumes are px^3),
         `fps`, `geometry` (long-axis points per ED/ES frame), and `preview` when `output_dir` is set.
     """
     from echoforge import load_model
@@ -349,6 +350,7 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
 
     efs = [b["EF_percent"] for b in beats if b["valid"]]
     result = {"input": str(input_path), "num_frames": len(frames), "fps": fps, "unit": unit,
+              "pixel_spacing_cm": spacing_cm,
               "ED_frames": ed_list, "ES_frames": es_list, "beats": beats,
               "geometry": geometry,
               "EF_mean": _r2(np.mean(efs)) if efs else None,
