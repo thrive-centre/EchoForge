@@ -1,8 +1,0 @@
-tensorflow>=2.10
-requests
-huggingface_hub
-numpy
-scipy
-scikit-image
-opencv-python
-pydicom
