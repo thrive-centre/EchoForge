@@ -28,6 +28,11 @@ PREVIEW_MAX_SIDE = 480
 FALLBACK_FPS = 30.0
 
 
+def _report_progress(progress, stage, fraction):
+    if progress is not None:
+        progress(stage, fraction)
+
+
 # ---------------------------------------------------------------- input
 def _positive_number(value):
     if value is None:
@@ -141,8 +146,9 @@ def read_input(path, pixel_spacing_mm=None):
 
 
 # ------------------------------------------------------- phase detection
-def predict_phase_curve(frames, pd_model, batch_size=16):
+def predict_phase_curve(frames, pd_model, batch_size=16, *, progress=None):
     """Sliding-window (stride 1) EchoPDNet inference, averaged over all windows covering a frame."""
+    _report_progress(progress, "phase", 0.0)
     n = len(frames)
     small = [cv2.resize(cv2.cvtColor(f, cv2.COLOR_GRAY2BGR), (PD_SIZE, PD_SIZE)) for f in frames]
     x = np.asarray(small, dtype=np.float32) / 255.0
@@ -157,6 +163,7 @@ def predict_phase_curve(frames, pd_model, batch_size=16):
         for s, p in zip(bs, preds):
             acc[s:s + SEQ_LEN] += p
             cnt[s:s + SEQ_LEN] += 1
+        _report_progress(progress, "phase", (i + len(bs)) / len(starts))
     return (acc / cnt)[:n]
 
 
@@ -293,7 +300,7 @@ def _write_preview(frames, output_dir, fps):
 
 
 # ------------------------------------------------------------------ main
-def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None, seg_model=None):
+def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None, seg_model=None, *, progress=None):
     """Compute LVEF for one A4C cine.
 
     Args:
@@ -302,6 +309,7 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
         output_dir: if given, it is emptied and filled with ED/ES frames, masks, phase_curve.txt,
             result.json, and a browser preview (preview.mp4, or preview_XXXX.jpg if ffmpeg is missing).
         pd_model, seg_model: optionally pass already-loaded models to reuse them across calls.
+        progress: optional callback(stage, fraction) with progress within each EF stage.
 
     Returns:
         dict with `beats` (ED/ES frame, EDV, ESV, EF per beat), `EF_mean`, `EF_median`, `unit`,
@@ -312,7 +320,7 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
 
     frames, spacing_cm, fps = read_input(input_path, pixel_spacing_mm)
     pd_model = pd_model or load_model("EchoPDNet", pretrained=True)
-    curve = predict_phase_curve(frames, pd_model)
+    curve = predict_phase_curve(frames, pd_model, progress=progress)
     ed_list, es_list = detect_beats(curve)
     pairs = pair_beats(ed_list, es_list)
     if not pairs:
@@ -329,6 +337,8 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
 
     cache = {}
     geometry = {}
+    _report_progress(progress, "segmentation", 0.0)
+    mask_count = len({index for pair in pairs for index in pair})
 
     def volume(idx):
         if idx not in cache:
@@ -336,6 +346,7 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
             vol_px, geom = mask_volume(mask, K_DISCS)
             cache[idx] = vol_px * scale
             geometry[str(idx)] = geom
+            _report_progress(progress, "segmentation", len(cache) / mask_count)
             if output_dir:
                 cv2.imwrite(os.path.join(output_dir, f"frame_{idx:04d}_mask.png"), mask * 255)
                 cv2.imwrite(os.path.join(output_dir, f"frame_{idx:04d}.png"), frames[idx])
@@ -348,6 +359,7 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
         beats.append({"ED_frame": ed, "ES_frame": es, f"EDV_{unit}": _r2(edv), f"ESV_{unit}": _r2(esv),
                       "EF_percent": _r2(ef), "valid": bool(ef is not None and edv > esv > 0)})
 
+    _report_progress(progress, "volumes", 0.0)
     efs = [b["EF_percent"] for b in beats if b["valid"]]
     result = {"input": str(input_path), "num_frames": len(frames), "fps": fps, "unit": unit,
               "pixel_spacing_cm": spacing_cm,
@@ -362,4 +374,5 @@ def compute_ef(input_path, pixel_spacing_mm=None, output_dir=None, pd_model=None
         np.savetxt(os.path.join(output_dir, "phase_curve.txt"), curve, fmt="%.2f")
         with open(os.path.join(output_dir, "result.json"), "w") as f:
             json.dump(result, f, indent=2)
+    _report_progress(progress, "volumes", 1.0)
     return result

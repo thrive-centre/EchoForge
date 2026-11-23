@@ -11,6 +11,7 @@ import cv2
 import numpy as np
 
 from .pipeline import (
+    _report_progress,
     read_input,
     detect_beats,
     pair_beats,
@@ -26,6 +27,8 @@ def compute_phase_mclv_ef(
     output_dir=None,
     pd_model=None,
     seg_model=None,
+    *,
+    progress=None,
 ):
     """Compute EF for all beats using EchoPDNet and MCLV."""
     from echoforge import load_model
@@ -34,7 +37,7 @@ def compute_phase_mclv_ef(
     pd_model = pd_model or load_model("EchoPDNet", pretrained=True)
     seg_model = seg_model or load_model("MCLV", pretrained=True)
 
-    curve = predict_phase_curve(frames, pd_model)
+    curve = predict_phase_curve(frames, pd_model, progress=progress)
     ed_list, es_list = detect_beats(curve)
     pairs = pair_beats(ed_list, es_list)
     if not pairs:
@@ -42,6 +45,8 @@ def compute_phase_mclv_ef(
 
     cache = {}
     masks = {}
+    _report_progress(progress, "segmentation", 0.0)
+    mask_count = len({index for pair in pairs for index in pair})
 
     def volume(index):
         if index not in cache:
@@ -50,6 +55,7 @@ def compute_phase_mclv_ef(
             cache[index] = (
                 float(mask_volume(mask, 20)[0]) if mask.any() else 0.0
             )
+            _report_progress(progress, "segmentation", len(cache) / mask_count)
         return cache[index]
 
     scale = spacing_cm ** 3 if spacing_cm else 1.0
@@ -69,6 +75,7 @@ def compute_phase_mclv_ef(
             "valid": valid,
         })
 
+    _report_progress(progress, "volumes", 0.0)
     efs = [beat["EF_percent"] for beat in beats if beat["valid"]]
     ed_frames = [beat["ED_frame"] for beat in beats]
     es_frames = [beat["ES_frame"] for beat in beats]
@@ -109,4 +116,5 @@ def compute_phase_mclv_ef(
         )
         with open(os.path.join(output_dir, "result.json"), "w") as file:
             json.dump(result, file, indent=2)
+    _report_progress(progress, "volumes", 1.0)
     return result
