@@ -30,7 +30,7 @@ def compute_phase_mclv_ef(
     """Compute EF for all beats using EchoPDNet and MCLV."""
     from echoforge import load_model
 
-    frames, spacing_cm = read_input(input_path, pixel_spacing_mm)
+    frames, spacing_cm, _fps = read_input(input_path, pixel_spacing_mm)
     pd_model = pd_model or load_model("EchoPDNet", pretrained=True)
     seg_model = seg_model or load_model("MCLV", pretrained=True)
 
@@ -48,7 +48,7 @@ def compute_phase_mclv_ef(
             mask = segment_mclv_frames([frames[index]], seg_model)[0]
             masks[index] = mask
             cache[index] = (
-                float(mask_volume(mask, 20)) if mask.any() else 0.0
+                float(mask_volume(mask, 20)[0]) if mask.any() else 0.0
             )
         return cache[index]
 

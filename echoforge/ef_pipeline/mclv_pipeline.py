@@ -30,7 +30,7 @@ CONFIRM_RISE = 0.15
 
 def _mask_volume(mask):
     try:
-        return float(mask_volume(mask, K_DISCS)) if mask.any() else 0.0
+        return float(mask_volume(mask, K_DISCS)[0]) if mask.any() else 0.0
     except Exception:
         return 0.0
 
@@ -106,7 +106,7 @@ def compute_mclv_ef(
     """Compute LVEF for all detected beats using MCLV and disk-summation volumes."""
     from echoforge import load_model
 
-    frames, spacing_cm = read_input(input_path, pixel_spacing_mm)
+    frames, spacing_cm, _fps = read_input(input_path, pixel_spacing_mm)
     seg_model = seg_model or load_model("MCLV", pretrained=True)
     scale = spacing_cm ** 3 if spacing_cm else 1.0
     unit = "mL" if spacing_cm else "px^3"

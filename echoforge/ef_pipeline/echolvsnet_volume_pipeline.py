@@ -22,7 +22,7 @@ def compute_echolvsnet_volume_ef(
     """Compute all beats using EchoLVSNet masks and disk-summation volumes."""
     from echoforge import load_model
 
-    frames, spacing_cm = read_input(input_path, pixel_spacing_mm)
+    frames, spacing_cm, _fps = read_input(input_path, pixel_spacing_mm)
     seg_model = seg_model or load_model("EchoLVSNet", pretrained=True)
 
     masks = []
@@ -31,7 +31,7 @@ def compute_echolvsnet_volume_ef(
         batch_masks = [segment_frame(frame, seg_model) for frame in frames[i:i + 4]]
         masks.extend(batch_masks)
         raw_volumes.extend(
-            float(mask_volume(mask, 20)) if mask.any() else 0.0
+            float(mask_volume(mask, 20)[0]) if mask.any() else 0.0
             for mask in batch_masks
         )
 
