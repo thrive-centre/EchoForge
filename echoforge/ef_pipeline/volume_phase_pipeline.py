@@ -17,7 +17,7 @@ import cv2
 import numpy as np
 
 from .mclv_pipeline import segment_frames as segment_mclv_frames
-from .pipeline import _r2, _write_preview, detect_beats, predict_phase_curve, read_input
+from .pipeline import _r2, _report_progress, _write_preview, detect_beats, predict_phase_curve, read_input
 from .volume import mask_volume
 from .volume_methods import select_beats
 
@@ -64,6 +64,8 @@ def compute_volume_phase_ef(
     output_dir=None,
     pd_model=None,
     seg_model=None,
+    *,
+    progress=None,
 ):
     """Compute LVEF for every beat, picking ED/ES from the MCLV volume curve.
 
@@ -81,19 +83,22 @@ def compute_volume_phase_ef(
     unit = "mL" if spacing_cm else "px^3"
 
     masks, raw, geoms = [], [], []
+    _report_progress(progress, "segmentation", 0.0)
     for i in range(0, len(frames), BATCH_SIZE):
         for mask in segment_mclv_frames(frames[i:i + BATCH_SIZE], seg_model):
             vol, geom = _volume_and_geometry(mask)
             masks.append(mask)
             raw.append(vol)
             geoms.append(geom)
+        _report_progress(progress, "segmentation", len(masks) / len(frames))
     raw = np.asarray(raw, dtype=float)
     pairs, clean, outlier = select_beats(raw)
 
-    phase = predict_phase_curve(frames, pd_model)
+    phase = predict_phase_curve(frames, pd_model, progress=progress)
     pd_ed, pd_es = detect_beats(phase)
     tolerance = max(AGREE_MIN_FRAMES, int(round(AGREE_SECONDS * fps))) if fps else AGREE_MIN_FRAMES
 
+    _report_progress(progress, "volumes", 0.0)
     beats = []
     for n, (ed, es) in enumerate(pairs):
         if n == len(pairs) - 1 and es >= len(frames) - MIN_TAIL_FRAMES:
@@ -158,4 +163,5 @@ def compute_volume_phase_ef(
         np.savetxt(os.path.join(output_dir, "volume_curve.txt"), clean * scale, fmt="%.2f")
         with open(os.path.join(output_dir, "result.json"), "w") as f:
             json.dump(result, f, indent=2)
+    _report_progress(progress, "volumes", 1.0)
     return result

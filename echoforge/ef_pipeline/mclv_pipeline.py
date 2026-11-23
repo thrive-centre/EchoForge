@@ -11,7 +11,7 @@ import os
 import cv2
 import numpy as np
 
-from .pipeline import read_input
+from .pipeline import _report_progress, read_input
 from .volume import mask_volume
 from .volume_methods import select_beats
 
@@ -79,14 +79,16 @@ def segment_frame(frame, seg_model):
     return segment_frames([frame], seg_model)[0]
 
 
-def volume_curve(frames, seg_model, early_stop=False, batch_size=BATCH_SIZE):
+def volume_curve(frames, seg_model, early_stop=False, batch_size=BATCH_SIZE, *, progress=None):
     """Segment every processed frame and calculate its LV volume trajectory."""
     masks = []
     volumes = []
+    _report_progress(progress, "segmentation", 0.0)
     for i in range(0, len(frames), batch_size):
         for mask in segment_frames(frames[i:i + batch_size], seg_model):
             masks.append(mask)
             volumes.append(_mask_volume(mask))
+        _report_progress(progress, "segmentation", len(masks) / len(frames))
         if early_stop and len(volumes) >= len(frames):
             break
     return masks, np.asarray(volumes, dtype=float)
@@ -102,6 +104,8 @@ def compute_mclv_ef(
     output_dir=None,
     seg_model=None,
     early_stop=True,
+    *,
+    progress=None,
 ):
     """Compute LVEF for all detected beats using MCLV and disk-summation volumes."""
     from echoforge import load_model
@@ -115,7 +119,9 @@ def compute_mclv_ef(
         frames,
         seg_model,
         early_stop=early_stop,
+        progress=progress,
     )
+    _report_progress(progress, "volumes", 0.0)
     pairs, clean_volumes, outlier = select_beats(raw_volumes)
     curve = clean_volumes * scale
     beats = []
@@ -172,4 +178,5 @@ def compute_mclv_ef(
         )
         with open(os.path.join(output_dir, "result.json"), "w") as file:
             json.dump(result, file, indent=2)
+    _report_progress(progress, "volumes", 1.0)
     return result

@@ -8,7 +8,7 @@ import json
 import os
 import numpy as np
 
-from .pipeline import read_input, segment_frame
+from .pipeline import _report_progress, read_input, segment_frame
 from .volume import mask_volume
 from .volume_methods import select_beats
 
@@ -18,6 +18,8 @@ def compute_echolvsnet_volume_ef(
     pixel_spacing_mm=None,
     output_dir=None,
     seg_model=None,
+    *,
+    progress=None,
 ):
     """Compute all beats using EchoLVSNet masks and disk-summation volumes."""
     from echoforge import load_model
@@ -27,6 +29,7 @@ def compute_echolvsnet_volume_ef(
 
     masks = []
     raw_volumes = []
+    _report_progress(progress, "segmentation", 0.0)
     for i in range(0, len(frames), 4):
         batch_masks = [segment_frame(frame, seg_model) for frame in frames[i:i + 4]]
         masks.extend(batch_masks)
@@ -34,7 +37,9 @@ def compute_echolvsnet_volume_ef(
             float(mask_volume(mask, 20)[0]) if mask.any() else 0.0
             for mask in batch_masks
         )
+        _report_progress(progress, "segmentation", len(masks) / len(frames))
 
+    _report_progress(progress, "volumes", 0.0)
     pairs, clean, outlier = select_beats(np.asarray(raw_volumes, dtype=float))
     scale = spacing_cm ** 3 if spacing_cm else 1.0
     unit = "mL" if spacing_cm else "px^3"
@@ -96,4 +101,5 @@ def compute_echolvsnet_volume_ef(
         )
         with open(os.path.join(output_dir, "result.json"), "w") as file:
             json.dump(result, file, indent=2)
+    _report_progress(progress, "volumes", 1.0)
     return result
