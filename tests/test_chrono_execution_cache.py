@@ -7,10 +7,10 @@ import time
 HERE=Path(__file__).resolve().parent
 p=HERE.parent/'echoforge'/'chrono_tracker.py';s=importlib.util.spec_from_file_location('execution_component',p);m=importlib.util.module_from_spec(s);sys.modules[s.name]=m;s.loader.exec_module(m)
 class ReuseTests(TestCase):
- def fixture(self,root):
+ def fixture(self,root,component_sha256=None):
   staging=root/'new/output/chrono/.stage';staging.mkdir(parents=True)
   identity=dict(version=m.COMPONENT_VERSION,component_sha256=m._sha(m.__file__),input_sha256='input',input_bytes=19,config={'threads':1},assets=[])
-  oldid=dict(identity,component_sha256='a497c67d3eb5a6f370d6f3466ae7fdcb03bef4cfc7e2f7bd1496cacdb95d92c0')
+  oldid=dict(identity,component_sha256=component_sha256 or identity['component_sha256'])
   key=hashlib.sha256(json.dumps(oldid,sort_keys=True).encode()).hexdigest();old=root/'old/output/chrono'/key;old.mkdir(parents=True)
   (old/'tracking.json').write_text('{"test":1}');(old/'frames').mkdir();(old/'frames/000000.png').write_bytes(b'original pixels')
   receipt=dict(status='complete',cache_key=key,component_sha256=oldid['component_sha256'],input_sha256='input',engine_sha256=m.ENGINE_SHA256,shared_recovery_version=62,recovery_kernel_revision=9,scientific_source_sha256={n:d for n,(_,d) in m.REPAIR_SOURCES.items()},artifacts=m._manifest(old),acquired_frames=1)
@@ -26,6 +26,11 @@ class ReuseTests(TestCase):
  def test_different_input_is_not_reused(self):
   with tempfile.TemporaryDirectory() as tmp:
    req,_,_,_=self.fixture(Path(tmp));req['input_sha256']='different';self.assertFalse(self.invoke(req,{}))
+ def test_previous_source_selection_is_not_reused(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   previous='a497c67d3eb5a6f370d6f3466ae7fdcb03bef4cfc7e2f7bd1496cacdb95d92c0'
+   req,_,_,_=self.fixture(Path(tmp),component_sha256=previous)
+   self.assertFalse(self.invoke(req,{}))
  def test_corrupt_prior_data_is_not_reused(self):
   with tempfile.TemporaryDirectory() as tmp:
    req,_,old,_=self.fixture(Path(tmp));(old/'tracking.json').write_text('changed');self.assertFalse(self.invoke(req,{}))
