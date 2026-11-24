@@ -1,6 +1,6 @@
 import unittest
 from contextlib import ExitStack
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import numpy as np
 
@@ -28,6 +28,18 @@ def fake_segment_batch(frames, model):
 
 
 class EfProgressTests(unittest.TestCase):
+    def test_preview_allows_ffmpeg_to_finish(self):
+        encoder = Mock()
+        encoder.wait.return_value = 0
+        frames = [np.zeros((8, 8), dtype=np.uint8)]
+
+        with patch.object(pipeline.subprocess, 'Popen', return_value=encoder), \
+                patch.object(pipeline.os.path, 'isfile', return_value=True), \
+                patch.object(pipeline.os.path, 'getsize', return_value=1):
+            self.assertTrue(pipeline._write_mp4(frames, 'preview.mp4', 30))
+
+        encoder.wait.assert_called_once_with()
+
     def test_all_pipelines_report_real_stage_work_without_changing_results(self):
         frames = [np.full((8, 8), index, dtype=np.uint8) for index in range(48)]
         pairs = [(3, 9), (20, 29)]

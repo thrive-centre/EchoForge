@@ -254,7 +254,7 @@ def _write_mp4(frames, path, fps):
             proc.stdin.write(np.ascontiguousarray(padded).tobytes())
         proc.stdin.close()
         err = proc.stderr.read()
-        code = proc.wait(timeout=180)
+        code = proc.wait()
     except Exception:
         proc.kill()
         proc.wait(timeout=10)
